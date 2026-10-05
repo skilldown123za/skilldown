@@ -1,33 +1,14 @@
--- ==================================================
--- YOKUDO HUB | FEATURE | Farming Manager (v5 FULL)
--- ✅ Divine Priority
--- ✅ Filter Character + Player + First Egg
--- ✅ Prevent Loop Reset (LastTargetUid)
--- ✅ Character Respawn → Restart
--- ✅ WalkSpeed ផ្ទាល់
--- ✅ Distance < 5 → Jump Out AFK
--- ✅ Check Egg Alive
--- ✅ Call UID ថ្មី ពេល Complete
--- ==================================================
-
+﻿
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 
 local Player = Players.LocalPlayer
-
--- ==================================================
--- AREA EGG CYCLE
--- ==================================================
 local AreaEggCycle = nil
 pcall(function()
     AreaEggCycle = require(ReplicatedStorage.Shared.Util.AreaEggCycle)
 end)
-
--- ==================================================
--- SETTINGS
--- ==================================================
 local NIGHT_CHECK_INTERVAL = 0.03
 local DAY_CHECK_INTERVAL = 0.05
 local SAFE_ZONE = Vector3.new(533, 70, -366)
@@ -36,20 +17,12 @@ local SAFE_WAIT_AFTER_REACH = 1
 local WALK_TIMEOUT = 30
 local LOOP_WAIT_AFTER_AFK = 2
 local JUMP_OUT_DISTANCE = 5
-
--- ==================================================
--- CACHE SYSTEM
--- ==================================================
 local Cache = {
     MeshIdMap = {},
     MeshIdMapBuilt = false,
     PetData = {},
     UidCategory = {},
 }
-
--- ==================================================
--- RARITY PRIORITY
--- ==================================================
 local RARITY_PRIORITY = {
     Divine = 1,
     Eternal = 2,
@@ -61,19 +34,11 @@ local RARITY_PRIORITY = {
     Uncommon = 5,
     Common = 5
 }
-
--- ==================================================
--- SELECTED RARITIES (Default: Top1-Top5)
--- ==================================================
 local SelectedRarities = {
     Divine = true, Eternal = true, Secret = true,
     Mythic = true, Legendary = true,
     Epic = false, Rare = false, Uncommon = false, Common = false
 }
-
--- ==================================================
--- FILTER FUNCTIONS
--- ==================================================
 local function IsPlayerCharacter(Obj)
     if not Obj then return false end
     
@@ -122,10 +87,6 @@ local function CheckEggAlive(Uid)
     
     return true
 end
-
--- ==================================================
--- BUILD MESHID MAP
--- ==================================================
 local function BuildMeshIdMap()
     if Cache.MeshIdMapBuilt then return end
 
@@ -160,10 +121,6 @@ local function BuildMeshIdMap()
     Cache.MeshIdMapBuilt = true
     print("[FarmingManager] MeshId Map Built")
 end
-
--- ==================================================
--- GET PET DATA
--- ==================================================
 local function GetPetData(AssetCategory)
     if not AssetCategory then return nil end
     if Cache.PetData[AssetCategory] then return Cache.PetData[AssetCategory] end
@@ -190,10 +147,6 @@ local function GetPetData(AssetCategory)
     Cache.PetData[AssetCategory] = Data
     return Data
 end
-
--- ==================================================
--- FIND ASSET CATEGORY
--- ==================================================
 local function FindAssetCategory(EggModel)
     if not EggModel then return nil end
 
@@ -215,10 +168,6 @@ local function FindAssetCategory(EggModel)
 
     return nil
 end
-
--- ==================================================
--- SORT EGGS
--- ==================================================
 local function SortEggs(EggList)
     table.sort(EggList, function(a, b)
         local Pa = RARITY_PRIORITY[a.Rarity] or 999
@@ -227,10 +176,6 @@ local function SortEggs(EggList)
         return a.EarningRate > b.EarningRate
     end)
 end
-
--- ==================================================
--- FIND BEST EGG (Divine Priority)
--- ==================================================
 local function FindBestEgg()
     local EggList = {}
     local DivineEgg = nil
@@ -271,13 +216,11 @@ local function FindBestEgg()
     end
 
     if DivineEgg then
-        print("[FarmingManager] ✨ Divine Egg (Priority):", DivineEgg.DisplayName)
+        print("[FarmingManager]  Divine Egg (Priority):", DivineEgg.DisplayName)
         return DivineEgg
     end
 
     if #EggList > 0 then SortEggs(EggList) return EggList[1] end
-
-    -- Workspace Backup
     local WsDivineEgg = nil
     local WsDivineEarningRate = 0
 
@@ -313,7 +256,7 @@ local function FindBestEgg()
     end
 
     if WsDivineEgg then
-        print("[FarmingManager] ✨ Divine Egg (Workspace):", WsDivineEgg.DisplayName)
+        print("[FarmingManager]  Divine Egg (Workspace):", WsDivineEgg.DisplayName)
         return WsDivineEgg
     end
 
@@ -321,10 +264,6 @@ local function FindBestEgg()
     SortEggs(EggList)
     return EggList[1]
 end
-
--- ==================================================
--- SET RARITIES
--- ==================================================
 local function SetRarities(List)
     SelectedRarities = {}
     for _, r in ipairs(List) do
@@ -332,10 +271,6 @@ local function SetRarities(List)
     end
     print("[FarmingManager] Rarities: " .. table.concat(List, ", "))
 end
-
--- ==================================================
--- STATE
--- ==================================================
 local FarmingEnabled = false
 local CurrentState = "IDLE"
 local CurrentPhase = "UNKNOWN"
@@ -345,10 +280,6 @@ local PendingEggUid = nil
 local WaitingForTeleport = false
 local LastTargetUid = nil
 local WalkConnection = nil
-
--- ==================================================
--- GET CHAR / ROOT / HUM
--- ==================================================
 local function GetChar() return Player.Character end
 local function GetRoot()
     local Char = GetChar()
@@ -360,10 +291,6 @@ local function GetHum()
     if not Char then return nil end
     return Char:FindFirstChildOfClass("Humanoid")
 end
-
--- ==================================================
--- CLEANUP WALK
--- ==================================================
 local function CleanupWalk()
     if WalkConnection then WalkConnection:Disconnect() WalkConnection = nil end
 
@@ -379,10 +306,6 @@ local function CleanupWalk()
         end)
     end
 end
-
--- ==================================================
--- WALK TP (WalkSpeed ផ្ទាល់)
--- ==================================================
 local function WalkTP(Destination, Callback)
     CleanupWalk()
 
@@ -398,7 +321,7 @@ local function WalkTP(Destination, Callback)
     end
 
     local PlayerSpeed = Hum.WalkSpeed
-    print(string.format("[FarmingManager] 🚶 Walk TP → %s | Speed: %.1f", tostring(Destination), PlayerSpeed))
+    print(string.format("[FarmingManager]  Walk TP  %s | Speed: %.1f", tostring(Destination), PlayerSpeed))
 
     local StartTime = tick()
     local LastCheck = 0
@@ -419,7 +342,7 @@ local function WalkTP(Destination, Callback)
             local Dist = (Root2.Position - Destination).Magnitude
             if Dist <= 3 then
                 CleanupWalk()
-                print(string.format("[FarmingManager] ✅ Walk TP Arrived | Dist: %.1f", Dist))
+                print(string.format("[FarmingManager]  Walk TP Arrived | Dist: %.1f", Dist))
                 if Callback then Callback() end
                 return
             end
@@ -433,10 +356,6 @@ local function WalkTP(Destination, Callback)
         end
     end)
 end
-
--- ==================================================
--- GET PHASE
--- ==================================================
 local function GetPhase()
     if AreaEggCycle then
         local Success, IsNight = pcall(function() return AreaEggCycle.IsNightPhase(Workspace:GetServerTimeNow()) end)
@@ -453,38 +372,30 @@ local function GetPhase()
 
     return "UNKNOWN"
 end
-
--- ==================================================
--- STOP ALL
--- ==================================================
 local function StopAll()
-    if _G.YOKUDO_AFKSystem and _G.YOKUDO_AFKSystem.IsEnabled() then
-        local TreadmillPos = _G.YOKUDO_AFKSystem.GetMyTreadmillPos()
+    if _G.JAYJAY_AFKSystem and _G.JAYJAY_AFKSystem.IsEnabled() then
+        local TreadmillPos = _G.JAYJAY_AFKSystem.GetMyTreadmillPos()
         if not TreadmillPos then
-            local _, Treadmill = _G.YOKUDO_AFKSystem.FindMyPlotAndTreadmill()
+            local _, Treadmill = _G.JAYJAY_AFKSystem.FindMyPlotAndTreadmill()
             if Treadmill then TreadmillPos = Treadmill.Position end
         end
         if TreadmillPos then
-            _G.YOKUDO_AFKSystem.JumpOutTreadmill(TreadmillPos, function()
-                _G.YOKUDO_AFKSystem.Disable()
+            _G.JAYJAY_AFKSystem.JumpOutTreadmill(TreadmillPos, function()
+                _G.JAYJAY_AFKSystem.Disable()
                 AFKStarted = false
             end)
         else
-            _G.YOKUDO_AFKSystem.Disable()
+            _G.JAYJAY_AFKSystem.Disable()
             AFKStarted = false
         end
     end
 
-    if _G.YOKUDO_TeleportSystem and _G.YOKUDO_TeleportSystem.IsEnabled() then
-        _G.YOKUDO_TeleportSystem.Disable()
+    if _G.JAYJAY_TeleportSystem and _G.JAYJAY_TeleportSystem.IsEnabled() then
+        _G.JAYJAY_TeleportSystem.Disable()
     end
 
     CleanupWalk()
 end
-
--- ==================================================
--- FLY TO SAFE ZONE
--- ==================================================
 local function FlyToSafeZoneAndWait()
     local Root = GetRoot()
     if not Root then return false end
@@ -507,12 +418,8 @@ local function FlyToSafeZoneAndWait()
 
     return false
 end
-
--- ==================================================
--- START TELEPORT SYSTEM
--- ==================================================
 local function StartTeleportSystem(EggUid)
-    if not _G.YOKUDO_TeleportSystem then
+    if not _G.JAYJAY_TeleportSystem then
         warn("[FarmingManager] TeleportSystem not loaded!")
         return false
     end
@@ -520,45 +427,37 @@ local function StartTeleportSystem(EggUid)
     print("[FarmingManager] Starting TeleportSystem | UID:", EggUid)
 
     WaitingForTeleport = true
-    _G.YOKUDO_TeleportSystem.SetTargetId(EggUid)
-    _G.YOKUDO_TeleportSystem.Enable()
+    _G.JAYJAY_TeleportSystem.SetTargetId(EggUid)
+    _G.JAYJAY_TeleportSystem.Enable()
     return true
 end
-
--- ==================================================
--- ENABLE AFK
--- ==================================================
 local function EnableAFK()
-    if _G.YOKUDO_AFKSystem and not _G.YOKUDO_AFKSystem.IsEnabled() then
-        _G.YOKUDO_AFKSystem.Enable()
+    if _G.JAYJAY_AFKSystem and not _G.JAYJAY_AFKSystem.IsEnabled() then
+        _G.JAYJAY_AFKSystem.Enable()
         AFKStarted = true
-        print("[FarmingManager] ✅ AFKSystem Enabled")
+        print("[FarmingManager]  AFKSystem Enabled")
     end
 end
-
--- ==================================================
--- ON TELEPORT COMPLETE
--- ==================================================
 local function OnTeleportComplete()
     if not FarmingEnabled then return end
     if not WaitingForTeleport then return end
 
     WaitingForTeleport = false
     AFKStarted = false
-    print("[FarmingManager] ✅ TeleportSystem Completed → Check New Egg")
+    print("[FarmingManager]  TeleportSystem Completed  Check New Egg")
 
     local BestEgg = FindBestEgg()
 
     if BestEgg then
         if not CheckEggAlive(BestEgg.Uid) then
-            warn("[FarmingManager] ⚠️ Egg Target Gone → AFK")
+            warn("[FarmingManager]  Egg Target Gone  AFK")
             task.wait(1)
             EnableAFK()
             return
         end
         
         if BestEgg.Uid == LastTargetUid then
-            warn("[FarmingManager] ⚠️ Same Target → Skip Loop")
+            warn("[FarmingManager]  Same Target  Skip Loop")
             task.wait(1)
             EnableAFK()
             return
@@ -579,14 +478,10 @@ local function OnTeleportComplete()
             end
         end)
     else
-        print("[FarmingManager] ❌ No Egg → Enable AFK")
+        print("[FarmingManager]  No Egg  Enable AFK")
         EnableAFK()
     end
 end
-
--- ==================================================
--- MAIN LOOP
--- ==================================================
 local function MainLoop()
     print("[FarmingManager] MainLoop Started")
 
@@ -598,7 +493,7 @@ local function MainLoop()
 
         if BestEgg then
             if CheckEggAlive(BestEgg.Uid) then
-                print("[FarmingManager] ✅ Egg Found:", BestEgg.DisplayName, "| Rarity:", BestEgg.Rarity, "| $/s:", BestEgg.EarningRate)
+                print("[FarmingManager]  Egg Found:", BestEgg.DisplayName, "| Rarity:", BestEgg.Rarity, "| $/s:", BestEgg.EarningRate)
                 PendingEggUid = BestEgg.Uid
                 LastTargetUid = BestEgg.Uid
 
@@ -615,16 +510,16 @@ local function MainLoop()
                         task.wait(0.2)
                     end
                 else
-                    print("[FarmingManager] ⚠️ Cannot reach Safe Zone → AFK")
+                    print("[FarmingManager]  Cannot reach Safe Zone  AFK")
                     EnableAFK()
                 end
             else
-                warn("[FarmingManager] ⚠️ Egg Target Gone → AFK")
+                warn("[FarmingManager]  Egg Target Gone  AFK")
                 task.wait(1)
                 EnableAFK()
             end
         else
-            print("[FarmingManager] ❌ No Egg → Enable AFK")
+            print("[FarmingManager]  No Egg  Enable AFK")
             EnableAFK()
         end
 
@@ -633,10 +528,6 @@ local function MainLoop()
 
     print("[FarmingManager] MainLoop Stopped")
 end
-
--- ==================================================
--- ENABLE / DISABLE
--- ==================================================
 local function Enable()
     if FarmingEnabled then return end
     FarmingEnabled = true
@@ -646,29 +537,29 @@ local function Enable()
     WaitingForTeleport = false
     LastTargetUid = nil
 
-    if _G.YOKUDO_AFKSystem and _G.YOKUDO_AFKSystem.IsEnabled() then
-        local MyTreadmillPos = _G.YOKUDO_AFKSystem.GetMyTreadmillPos()
+    if _G.JAYJAY_AFKSystem and _G.JAYJAY_AFKSystem.IsEnabled() then
+        local MyTreadmillPos = _G.JAYJAY_AFKSystem.GetMyTreadmillPos()
         local Root = GetRoot()
         
         if MyTreadmillPos and Root then
             local Dist = (Root.Position - MyTreadmillPos).Magnitude
             
             if Dist < JUMP_OUT_DISTANCE then
-                print(string.format("[FarmingManager] 🦘 Distance: %.1f (< %d) → Jump Out", Dist, JUMP_OUT_DISTANCE))
+                print(string.format("[FarmingManager]  Distance: %.1f (< %d)  Jump Out", Dist, JUMP_OUT_DISTANCE))
                 
-                _G.YOKUDO_AFKSystem.JumpOutTreadmill(MyTreadmillPos, function()
-                    _G.YOKUDO_AFKSystem.Disable()
+                _G.JAYJAY_AFKSystem.JumpOutTreadmill(MyTreadmillPos, function()
+                    _G.JAYJAY_AFKSystem.Disable()
                     AFKStarted = false
-                    print("[FarmingManager] ✅ Jumped Out")
+                    print("[FarmingManager]  Jumped Out")
                 end)
                 
                 task.wait(1.5)
             else
-                _G.YOKUDO_AFKSystem.Disable()
+                _G.JAYJAY_AFKSystem.Disable()
                 task.wait(0.5)
             end
         else
-            _G.YOKUDO_AFKSystem.Disable()
+            _G.JAYJAY_AFKSystem.Disable()
             task.wait(0.5)
         end
     end
@@ -681,7 +572,7 @@ local function Enable()
     task.wait(0.5)
     FarmingThread = task.spawn(function() MainLoop() end)
 
-    print("[YOKUDO] FarmingManager: ON")
+    print("[JAYJAY] FarmingManager: ON")
 end
 
 local function Disable()
@@ -701,29 +592,25 @@ local function Disable()
     LastTargetUid = nil
     CurrentState = "IDLE"
     CurrentPhase = "UNKNOWN"
-    print("[YOKUDO] FarmingManager: OFF")
+    print("[JAYJAY] FarmingManager: OFF")
 end
 
 local function Toggle()
     if FarmingEnabled then Disable() else Enable() end
 end
-
--- ==================================================
--- CHARACTER RESPAWN
--- ==================================================
 local function SetupDeathListener(Char)
     if not Char then return end
     local Hum = Char:FindFirstChildOfClass("Humanoid")
     if not Hum then return end
     
     Hum.Died:Connect(function()
-        print("[FarmingManager] ☠️ Player Died")
+        print("[FarmingManager]  Player Died")
         if FarmingEnabled then
-            if _G.YOKUDO_TeleportSystem and _G.YOKUDO_TeleportSystem.IsEnabled() then
-                _G.YOKUDO_TeleportSystem.Disable()
+            if _G.JAYJAY_TeleportSystem and _G.JAYJAY_TeleportSystem.IsEnabled() then
+                _G.JAYJAY_TeleportSystem.Disable()
             end
-            if _G.YOKUDO_AFKSystem and _G.YOKUDO_AFKSystem.IsEnabled() then
-                _G.YOKUDO_AFKSystem.Disable()
+            if _G.JAYJAY_AFKSystem and _G.JAYJAY_AFKSystem.IsEnabled() then
+                _G.JAYJAY_AFKSystem.Disable()
             end
             CleanupWalk()
             WaitingForTeleport = false
@@ -733,7 +620,7 @@ end
 
 Player.CharacterAdded:Connect(function(Char)
     if not FarmingEnabled then return end
-    print("[FarmingManager] 🔄 Character Respawned → Restart")
+    print("[FarmingManager]  Character Respawned  Restart")
     task.wait(3)
     
     if FarmingThread then
@@ -749,16 +636,12 @@ Player.CharacterAdded:Connect(function(Char)
     task.wait(2)
     FarmingThread = task.spawn(function() MainLoop() end)
     
-    print("[FarmingManager] ✅ Farming Restarted")
+    print("[FarmingManager]  Farming Restarted")
     SetupDeathListener(Char)
 end)
 
 if Player.Character then SetupDeathListener(Player.Character) end
-
--- ==================================================
--- EXPORT
--- ==================================================
-_G.YOKUDO_FarmingManager = {
+_G.JAYJAY_FarmingManager = {
     Enable = Enable,
     Disable = Disable,
     Toggle = Toggle,
@@ -797,4 +680,4 @@ task.spawn(function()
     end
 end)
 
-print("✅ FarmingManager Loaded (v5 FINAL)")
+print(" FarmingManager Loaded (v5 FINAL)")

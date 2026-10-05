@@ -1,22 +1,9 @@
--- ==================================================
--- YOKUDO HUB | FEATURE | Egg Check Premium
--- ជ្រើសរើស Egg តាម Rarity (Divine > Eternal > Secret) និង $/s
--- ✅ Register ជាមួយ CharacterSystem
--- ==================================================
-
+﻿
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Player = Players.LocalPlayer
-
--- ==================================================
--- STATE
--- ==================================================
 local SelectedRarities = {}
-
--- ==================================================
--- MESHID MAP
--- ==================================================
 local MeshIdMap = {}
 local MeshIdMapBuilt = false
 
@@ -54,10 +41,6 @@ local function BuildMeshIdMap()
     MeshIdMapBuilt = true
     print("[EggCheckPremium] MeshId Map Built: " .. tostring(#Configs:GetChildren()) .. " Configs")
 end
-
--- ==================================================
--- GET PET DATA
--- ==================================================
 local function GetPetData(AssetCategory)
     local Assets = ReplicatedStorage:FindFirstChild("Data")
     if not Assets then return nil end
@@ -78,10 +61,6 @@ local function GetPetData(AssetCategory)
         DisplayName = Module.DisplayName or AssetCategory
     }
 end
-
--- ==================================================
--- FIND ASSET CATEGORY
--- ==================================================
 local function FindAssetCategory(EggModel)
     if not MeshIdMapBuilt then BuildMeshIdMap() end
     
@@ -97,10 +76,6 @@ local function FindAssetCategory(EggModel)
     end
     return nil
 end
-
--- ==================================================
--- SORT EGG (Divine > Eternal > Secret > $/s)
--- ==================================================
 local RARITY_PRIORITY = {
     Divine = 1,
     Eternal = 2,
@@ -115,10 +90,6 @@ local function SortEggs(EggList)
         return a.EarningRate > b.EarningRate
     end)
 end
-
--- ==================================================
--- FIND BEST EGG
--- ==================================================
 local function FindBestEgg()
     local Container = workspace:FindFirstChild("AreaEggSlotsClient")
     if not Container then return nil end
@@ -147,10 +118,6 @@ local function FindBestEgg()
     SortEggs(EggList)
     return EggList[1]
 end
-
--- ==================================================
--- FIND ALL EGGS
--- ==================================================
 local function FindAllEggs()
     local Container = workspace:FindFirstChild("AreaEggSlotsClient")
     if not Container then return {} end
@@ -178,10 +145,6 @@ local function FindAllEggs()
     SortEggs(EggList)
     return EggList
 end
-
--- ==================================================
--- CHECK EGG BY RARITY
--- ==================================================
 local function GetEggsByRarity(Rarity)
     local AllEggs = FindAllEggs()
     local Filtered = {}
@@ -194,10 +157,6 @@ local function GetEggsByRarity(Rarity)
     
     return Filtered
 end
-
--- ==================================================
--- SET RARITIES
--- ==================================================
 local function SetRarities(List)
     SelectedRarities = {}
     for _, r in ipairs(List) do
@@ -213,19 +172,11 @@ local function GetRarities()
     end
     return List
 end
-
--- ==================================================
--- BUILD MESHID MAP ON LOAD
--- ==================================================
 task.spawn(function()
     task.wait(1)
     BuildMeshIdMap()
 end)
-
--- ==================================================
--- EXPORT
--- ==================================================
-_G.YOKUDO_EggCheckPremium = {
+_G.JAYJAY_EggCheckPremium = {
     SetRarities = SetRarities,
     GetRarities = GetRarities,
     FindBestEgg = FindBestEgg,
@@ -238,4 +189,4 @@ _G.YOKUDO_EggCheckPremium = {
     RARITY_PRIORITY = RARITY_PRIORITY
 }
 
-print("✅ EggCheckPremium Feature Loaded (Register)")
+print(" EggCheckPremium Feature Loaded (Register)")

@@ -1,24 +1,8 @@
--- ==================================================
--- YOKUDO HUB | FEATURE | AFK System (v9 FINAL)
--- ✅ Walk TP: Humanoid:MoveTo() + Player Speed
--- ✅ Save / Restore WalkSpeed
--- ✅ Reset PlatformStand
--- ✅ Check Grounded
--- ✅ Character Respawn → Resume
--- ✅ Fix: `continue` → `if ... then end`
--- ❌ ដក Y Check
--- ❌ ដក Dead Position
--- ❌ ដក TeleportToDeadPosition
--- ==================================================
-
+﻿
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 
 local Player = Players.LocalPlayer
-
--- ==================================================
--- SETTINGS
--- ==================================================
 local ARRIVE_TIMEOUT = 60
 local JUMP_DISTANCE_THRESHOLD = 5
 local JUMP_MAX_ATTEMPTS = 50
@@ -28,10 +12,6 @@ local DIST_CHECK_INTERVAL = 4
 local SAFE_WAIT_TIME = 1
 local SAFE_ZONE = Vector3.new(533, 70, -366)
 local GROUND_CHECK_DISTANCE = 10
-
--- ==================================================
--- STATE
--- ==================================================
 local AFKEnabled = false
 local MyPlot = nil
 local MyTreadmill = nil
@@ -39,10 +19,6 @@ local MyTreadmillPos = nil
 local WalkConnection = nil
 local DistCheckThread = nil
 local SavedWalkSpeed = nil
-
--- ==================================================
--- GET HUMANOID
--- ==================================================
 local function GetHumanoid()
     local Char = Player.Character
     if not Char then return nil, nil end
@@ -50,15 +26,11 @@ local function GetHumanoid()
     local Root = Char:FindFirstChild("HumanoidRootPart")
     return Hum, Root
 end
-
--- ==================================================
--- SAVE / RESTORE WALK SPEED
--- ==================================================
 local function SaveWalkSpeed()
     local Hum = GetHumanoid()
     if Hum and SavedWalkSpeed == nil then
         SavedWalkSpeed = Hum.WalkSpeed
-        print("[AFK] 💾 Saved WalkSpeed:", SavedWalkSpeed)
+        print("[AFK]  Saved WalkSpeed:", SavedWalkSpeed)
     end
 end
 
@@ -66,13 +38,9 @@ local function RestoreWalkSpeed()
     local Hum = GetHumanoid()
     if Hum and SavedWalkSpeed then
         Hum.WalkSpeed = SavedWalkSpeed
-        print("[AFK] ✅ Restored WalkSpeed:", SavedWalkSpeed)
+        print("[AFK]  Restored WalkSpeed:", SavedWalkSpeed)
     end
 end
-
--- ==================================================
--- CHECK GROUNDED
--- ==================================================
 local function IsGrounded()
     local Hum, Root = GetHumanoid()
     if not Hum or not Root then return false end
@@ -89,10 +57,6 @@ local function IsGrounded()
 
     return Result ~= nil
 end
-
--- ==================================================
--- RESET PLATFORMSTAND
--- ==================================================
 local function ResetPlatformStand()
     local Hum, Root = GetHumanoid()
     if Hum then
@@ -108,10 +72,6 @@ local function ResetPlatformStand()
         end)
     end
 end
-
--- ==================================================
--- CLEANUP
--- ==================================================
 local function CleanupMovers()
     if WalkConnection then
         WalkConnection:Disconnect()
@@ -131,10 +91,6 @@ local function CleanupMovers()
         end)
     end
 end
-
--- ==================================================
--- WALK TP
--- ==================================================
 local function WalkTP(Destination, Callback)
     CleanupMovers()
 
@@ -180,9 +136,9 @@ local function WalkTP(Destination, Callback)
                 task.wait(0.5)
 
                 if IsGrounded() then
-                    print("[AFK] ✅ Player Grounded")
+                    print("[AFK]  Player Grounded")
                 else
-                    print("[AFK] ⚠️ Player NOT Grounded → Reset")
+                    print("[AFK]  Player NOT Grounded  Reset")
                     ResetPlatformStand()
                 end
 
@@ -199,10 +155,6 @@ local function WalkTP(Destination, Callback)
         end
     end)
 end
-
--- ==================================================
--- FIND MY PLOT AND TREADMILL
--- ==================================================
 local function FindMyPlotAndTreadmill()
     local Plots = workspace:FindFirstChild("Plots")
     if not Plots then return nil, nil end
@@ -230,10 +182,6 @@ local function FindMyPlotAndTreadmill()
     end
     return nil, nil
 end
-
--- ==================================================
--- JUMP OUT TREADMILL
--- ==================================================
 local function JumpOutTreadmill(TreadmillPos, Callback)
     local Hum, Root = GetHumanoid()
     if not Hum or not Root or not TreadmillPos then
@@ -267,10 +215,6 @@ local function JumpOutTreadmill(TreadmillPos, Callback)
         if Callback then Callback() end
     end)
 end
-
--- ==================================================
--- DISTANCE CHECK LOOP
--- ==================================================
 local function StartDistanceCheck()
     if DistCheckThread then
         pcall(function() task.cancel(DistCheckThread) end)
@@ -294,10 +238,6 @@ local function StartDistanceCheck()
         end
     end)
 end
-
--- ==================================================
--- ENABLE
--- ==================================================
 local function EnableAFK()
     if AFKEnabled then return end
     AFKEnabled = true
@@ -322,9 +262,9 @@ local function EnableAFK()
             task.wait(0.5)
 
             if IsGrounded() then
-                print("[AFK] ✅ Player Grounded at Treadmill")
+                print("[AFK]  Player Grounded at Treadmill")
             else
-                print("[AFK] ⚠️ Player NOT Grounded → Reset")
+                print("[AFK]  Player NOT Grounded  Reset")
                 ResetPlatformStand()
                 task.wait(0.5)
             end
@@ -335,10 +275,6 @@ local function EnableAFK()
 
     print("[AFK] AFK System: ON")
 end
-
--- ==================================================
--- DISABLE
--- ==================================================
 local function DisableAFK()
     if not AFKEnabled then return end
     AFKEnabled = false
@@ -356,10 +292,6 @@ local function DisableAFK()
 
     print("[AFK] AFK System: OFF")
 end
-
--- ==================================================
--- CHARACTER ADDED (Resume ពេល Respawn)
--- ==================================================
 Player.CharacterAdded:Connect(function(Char)
     if not AFKEnabled then return end
 
@@ -383,9 +315,9 @@ Player.CharacterAdded:Connect(function(Char)
         task.wait(0.5)
 
         if IsGrounded() then
-            print("[AFK] ✅ Player Grounded after Respawn")
+            print("[AFK]  Player Grounded after Respawn")
         else
-            print("[AFK] ⚠️ NOT Grounded after Respawn → Reset")
+            print("[AFK]  NOT Grounded after Respawn  Reset")
             ResetPlatformStand()
             task.wait(0.5)
         end
@@ -395,11 +327,7 @@ Player.CharacterAdded:Connect(function(Char)
 
     print("[AFK] AFK System: Resumed after Respawn")
 end)
-
--- ==================================================
--- EXPORT
--- ==================================================
-_G.YOKUDO_AFKSystem = {
+_G.JAYJAY_AFKSystem = {
     Enable = EnableAFK,
     Disable = DisableAFK,
     IsEnabled = function() return AFKEnabled end,
@@ -419,4 +347,4 @@ _G.YOKUDO_AFKSystem = {
     SAFE_ZONE = SAFE_ZONE,
 }
 
-print("✅ AFKSystem Loaded (v9 FINAL — No Y Check + No Dead Position)")
+print(" AFKSystem Loaded (v9 FINAL  No Y Check + No Dead Position)")

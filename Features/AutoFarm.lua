@@ -1,19 +1,9 @@
--- ==================================================
--- YOKUDO HUB | FEATURE | Auto Farm (FAST)
--- ✅ Cache PetData + UidCategory → លឿន
--- ✅ ភ្ជាប់ជាមួយ TeleportSystem ថ្មី (Walk TP + Shot TP)
--- ✅ Disable VIPTP ពេល StartTeleport (ការពារជាន់គ្នា)
--- ==================================================
-
+﻿
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Player = Players.LocalPlayer
 local Container = workspace:WaitForChild("AreaEggSlotsClient")
-
---==================================================
--- CACHE SYSTEM
---==================================================
 local Cache = {
     MeshIdMap = {},
     MeshIdMapBuilt = false,
@@ -24,25 +14,13 @@ local Cache = {
 local AutoFarmEnabled = false
 local SelectedEgg = nil
 local EggList = {}
-
---==================================================
--- ASSETS
---==================================================
 local Assets = ReplicatedStorage:WaitForChild("Data"):WaitForChild("Assets")
 local Configs = Assets:WaitForChild("Configs")
 local EggModels = ReplicatedStorage:WaitForChild("Assets"):WaitForChild("Models"):WaitForChild("Eggs")
-
---==================================================
--- MUTATIONS MODULE (CACHE)
---==================================================
 local MutationsModule = nil
 pcall(function()
     MutationsModule = require(ReplicatedStorage.Shared.Modules.Mutations)
 end)
-
---==================================================
--- BUILD MESHID MAP (ម្ដងគត់)
---==================================================
 local function BuildMeshIdMap()
     if Cache.MeshIdMapBuilt then return end
 
@@ -71,10 +49,6 @@ local function BuildMeshIdMap()
 end
 
 BuildMeshIdMap()
-
---==================================================
--- GET PET DATA (CACHE)
---==================================================
 local function GetPetData(AssetCategory)
     if not AssetCategory then return nil end
 
@@ -105,10 +79,6 @@ local function GetPetData(AssetCategory)
     Cache.PetData[AssetCategory] = Data
     return Data
 end
-
---==================================================
--- FORMAT MONEY
---==================================================
 local function FormatMoney(Amount)
     if type(Amount) ~= "number" then return tostring(Amount) end
     if Amount >= 1e12 then
@@ -123,10 +93,6 @@ local function FormatMoney(Amount)
         return tostring(math.floor(Amount))
     end
 end
-
---==================================================
--- CALCULATE REAL RATE (CACHE MUTATIONS)
---==================================================
 local function CalculateRatePerSecond(EarningRate, Scale, Mutations)
     local PayoutFactor
     if Scale <= 5 then
@@ -147,10 +113,6 @@ local function CalculateRatePerSecond(EarningRate, Scale, Mutations)
 
     return math.round(EarningRate * PayoutFactor * MutationMultiplier)
 end
-
---==================================================
--- FIND ASSET CATEGORY (CACHE Uid)
---==================================================
 local function FindAssetCategory(EggModel)
     if not EggModel then return nil end
 
@@ -177,10 +139,6 @@ local function FindAssetCategory(EggModel)
     end
     return nil
 end
-
---==================================================
--- SCAN EGGS (FAST)
---==================================================
 local function ScanEggs()
     EggList = {}
 
@@ -213,70 +171,48 @@ local function ScanEggs()
 
     return EggList
 end
-
---==================================================
--- ENABLE / DISABLE
---==================================================
 local function EnableAutoFarm()
     AutoFarmEnabled = true
-    print("[YOKUDO] Auto Farm: ON")
+    print("[JAYJAY] Auto Farm: ON")
 end
 
 local function DisableAutoFarm()
     AutoFarmEnabled = false
-    print("[YOKUDO] Auto Farm: OFF")
+    print("[JAYJAY] Auto Farm: OFF")
 end
-
---==================================================
--- SELECT EGG
---==================================================
 local function SelectEgg(EggData)
     SelectedEgg = EggData
-    print("[YOKUDO] Selected Egg: " .. EggData.DisplayName .. " ($" .. FormatMoney(EggData.EarningRate) .. "/s)")
+    print("[JAYJAY] Selected Egg: " .. EggData.DisplayName .. " ($" .. FormatMoney(EggData.EarningRate) .. "/s)")
 end
-
---==================================================
--- ✅ START TELEPORT (Disable VIPTP មុន)
---==================================================
 local function StartTeleport()
     if not SelectedEgg then
-        warn("[YOKUDO] No Egg Selected")
+        warn("[JAYJAY] No Egg Selected")
         return
     end
-
-    -- ✅ Disable VIPTP (Tab Farming) មុន
-    if _G.YOKUDO_VIPTP and _G.YOKUDO_VIPTP.IsEnabled() then
+    if _G.JAYJAY_VIPTP and _G.JAYJAY_VIPTP.IsEnabled() then
         pcall(function()
-            _G.YOKUDO_VIPTP.Disable()
+            _G.JAYJAY_VIPTP.Disable()
         end)
-        print("[AutoFarm] ✅ Disabled VIPTP (Prevent Conflict)")
+        print("[AutoFarm]  Disabled VIPTP (Prevent Conflict)")
     end
 
-    print("[YOKUDO] Start Teleport | Target: " .. SelectedEgg.Id)
+    print("[JAYJAY] Start Teleport | Target: " .. SelectedEgg.Id)
 
-    if _G.YOKUDO_TeleportSystem then
-        _G.YOKUDO_TeleportSystem.SetTargetId(SelectedEgg.Id)
-        _G.YOKUDO_TeleportSystem.Enable()
-        print("[YOKUDO] ✅ TeleportSystem Enabled")
+    if _G.JAYJAY_TeleportSystem then
+        _G.JAYJAY_TeleportSystem.SetTargetId(SelectedEgg.Id)
+        _G.JAYJAY_TeleportSystem.Enable()
+        print("[JAYJAY]  TeleportSystem Enabled")
     else
-        warn("[YOKUDO] TeleportSystem not loaded!")
+        warn("[JAYJAY] TeleportSystem not loaded!")
     end
 end
-
---==================================================
--- STOP TELEPORT
---==================================================
 local function StopTeleport()
-    if _G.YOKUDO_TeleportSystem then
-        _G.YOKUDO_TeleportSystem.Disable()
+    if _G.JAYJAY_TeleportSystem then
+        _G.JAYJAY_TeleportSystem.Disable()
     end
-    print("[YOKUDO] Stop Teleport")
+    print("[JAYJAY] Stop Teleport")
 end
-
---==================================================
--- EXPORT
---==================================================
-_G.YOKUDO_AutoFarm = {
+_G.JAYJAY_AutoFarm = {
     Enable = EnableAutoFarm,
     Disable = DisableAutoFarm,
     IsEnabled = function() return AutoFarmEnabled end,
@@ -293,12 +229,8 @@ _G.YOKUDO_AutoFarm = {
         print("[AutoFarm] Uid Cache Cleared")
     end,
 }
-
---==================================================
--- REGISTER
---==================================================
-if _G.YOKUDO_CharacterSystem then
-    _G.YOKUDO_CharacterSystem:RegisterFeature({
+if _G.JAYJAY_CharacterSystem then
+    _G.JAYJAY_CharacterSystem:RegisterFeature({
         Name = "AutoFarm",
         Enable = EnableAutoFarm,
         Disable = DisableAutoFarm,
@@ -307,7 +239,7 @@ if _G.YOKUDO_CharacterSystem then
             if AutoFarmEnabled and SelectedEgg then
                 task.wait(2)
                 pcall(function()
-                    if _G.YOKUDO_TeleportSystem and _G.YOKUDO_TeleportSystem.IsEnabled() then
+                    if _G.JAYJAY_TeleportSystem and _G.JAYJAY_TeleportSystem.IsEnabled() then
                         StartTeleport()
                     end
                 end)
@@ -316,4 +248,4 @@ if _G.YOKUDO_CharacterSystem then
     })
 end
 
-print("✅ AutoFarm Feature Loaded (FAST + CACHE + TeleportSystem + No Conflict)")
+print(" AutoFarm Feature Loaded (FAST + CACHE + TeleportSystem + No Conflict)")

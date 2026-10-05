@@ -1,19 +1,10 @@
--- ==================================================
--- YOKUDO HUB | FEATURE | Auto Attack
--- Auto Equip Bat + Auto Fire Remote (Range 17 + Fast)
--- ✅ Register ជាមួយ CharacterSystem
--- ==================================================
-
+﻿
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Player = Players.LocalPlayer
 local Backpack = Player:WaitForChild("Backpack")
-
--- ==================================================
--- FIND REMOTE
--- ==================================================
 local function GetBatSwingRemote()
     local Success, Remote = pcall(function()
         return ReplicatedStorage.Packages.Networking["RE/BatSwing/Trigger"]
@@ -23,16 +14,8 @@ local function GetBatSwingRemote()
     end
     return nil
 end
-
--- ==================================================
--- SETTINGS
--- ==================================================
 local ATTACK_RANGE = 60
 local FIRE_INTERVAL = 0.01
-
--- ==================================================
--- STATE
--- ==================================================
 local AutoEquipEnabled = false
 local AutoHitEnabled = false
 local EquipConnection = nil
@@ -40,10 +23,6 @@ local HitConnection = nil
 local CurrentBat = nil
 local LastFire = 0
 local TraceSequence = 0
-
--- ==================================================
--- GET HUMANOID
--- ==================================================
 local function GetHumanoid()
     local Char = Player.Character
     if not Char then return nil, nil end
@@ -51,10 +30,6 @@ local function GetHumanoid()
     local Root = Char:FindFirstChild("HumanoidRootPart")
     return Hum, Root
 end
-
--- ==================================================
--- FIND BAT TOOL
--- ==================================================
 local function FindBatTool()
     for _, tool in ipairs(Backpack:GetChildren()) do
         if tool:IsA("Tool") then
@@ -75,10 +50,6 @@ local function FindBatTool()
     end
     return nil
 end
-
--- ==================================================
--- FEATURE 1: AUTO EQUIP BAT
--- ==================================================
 local function EquipBat()
     local Bat = FindBatTool()
     if not Bat then return false end
@@ -111,7 +82,7 @@ local function EnableAutoEquip()
         end
     end)
     EquipBat()
-    print("[YOKUDO] Auto Equip Bat: ON")
+    print("[JAYJAY] Auto Equip Bat: ON")
 end
 
 local function DisableAutoEquip()
@@ -121,16 +92,12 @@ local function DisableAutoEquip()
         EquipConnection:Disconnect()
         EquipConnection = nil
     end
-    print("[YOKUDO] Auto Equip Bat: OFF")
+    print("[JAYJAY] Auto Equip Bat: OFF")
 end
 
 local function ToggleAutoEquip()
     if AutoEquipEnabled then DisableAutoEquip() else EnableAutoEquip() end
 end
-
--- ==================================================
--- FEATURE 2: AUTO FIRE REMOTE
--- ==================================================
 local function FindClosestPlayer()
     local Hum, Root = GetHumanoid()
     if not Root then return nil end
@@ -186,7 +153,7 @@ local function EnableAutoHit()
         LastFire = now
         FireRemote()
     end)
-    print("[YOKUDO] Auto Fire Remote (Range 17 + Fast): ON")
+    print("[JAYJAY] Auto Fire Remote (Range 17 + Fast): ON")
 end
 
 local function DisableAutoHit()
@@ -196,17 +163,13 @@ local function DisableAutoHit()
         HitConnection:Disconnect()
         HitConnection = nil
     end
-    print("[YOKUDO] Auto Fire Remote: OFF")
+    print("[JAYJAY] Auto Fire Remote: OFF")
 end
 
 local function ToggleAutoHit()
     if AutoHitEnabled then DisableAutoHit() else EnableAutoHit() end
 end
-
--- ==================================================
--- EXPORT
--- ==================================================
-_G.YOKUDO_AutoAttack = {
+_G.JAYJAY_AutoAttack = {
     ToggleAutoEquip = ToggleAutoEquip,
     EnableAutoEquip = EnableAutoEquip,
     DisableAutoEquip = DisableAutoEquip,
@@ -221,4 +184,4 @@ _G.YOKUDO_AutoAttack = {
 }
 
 
-print("✅ AutoAttack Feature Loaded (Range 17 + Fast + Register)")
+print(" AutoAttack Feature Loaded (Range 17 + Fast + Register)")

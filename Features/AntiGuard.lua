@@ -1,28 +1,13 @@
--- ==================================================
--- YOKUDO HUB | FEATURE | Anti Guard
--- ✅ Check DropHeldEgg.Enabled
--- ✅ True → Lock Camera → CFrame Safe Zone → Wait 1s → Return → Unlock Camera
--- ✅ False → Reset
--- ✅ Loop ដដែល
--- ==================================================
-
+﻿
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local Workspace = game:GetService("Workspace")
 
 local Player = Players.LocalPlayer
-
--- ==================================================
--- SETTINGS
--- ==================================================
 local SAFE_ZONE = Vector3.new(550, 70, -431)
 local CHECK_INTERVAL = 0.01
 local WAIT_AT_SAFE = 1
-
--- ==================================================
--- STATE
--- ==================================================
 local AntiGuardEnabled = false
 local CheckThread = nil
 local FastClickConnection = nil
@@ -30,40 +15,22 @@ local FastClickHeartbeat = nil
 local FastClickCounter = 0
 local LastState = false
 local OriginalCFrame = nil
-
--- ✅ Camera Lock State
 local CameraLockConnection = nil
 local LockedCameraCFrame = nil
-
--- ==================================================
--- GET HUMANOID
--- ==================================================
 local function GetHumanoid()
     local Char = Player.Character
     if not Char then return nil, nil end
     return Char:FindFirstChildOfClass("Humanoid"), Char:FindFirstChild("HumanoidRootPart")
 end
-
--- ==================================================
--- GET DROP HELD EGG
--- ==================================================
 local function GetDropHeldEgg()
     local PG = Player:FindFirstChild("PlayerGui")
     if not PG then return nil end
     return PG:FindFirstChild("DropHeldEgg", true)
 end
-
--- ==================================================
--- CAMERA LOCK
--- ==================================================
 local function LockCamera()
     local Camera = Workspace.CurrentCamera
     if not Camera then return end
-
-    -- ✅ Save Camera CFrame
     LockedCameraCFrame = Camera.CFrame
-
-    -- ✅ Lock Camera រាល់ Frame
     if CameraLockConnection then CameraLockConnection:Disconnect() end
     CameraLockConnection = RunService.RenderStepped:Connect(function()
         if not LockedCameraCFrame then return end
@@ -74,7 +41,7 @@ local function LockCamera()
         end
     end)
 
-    print("[AntiGuard] 🔒 Camera Locked:", LockedCameraCFrame.Position)
+    print("[AntiGuard]  Camera Locked:", LockedCameraCFrame.Position)
 end
 
 local function UnlockCamera()
@@ -83,12 +50,8 @@ local function UnlockCamera()
         CameraLockConnection = nil
     end
     LockedCameraCFrame = nil
-    print("[AntiGuard] 🔓 Camera Unlocked")
+    print("[AntiGuard]  Camera Unlocked")
 end
-
--- ==================================================
--- CLICK FAST
--- ==================================================
 local function ApplyHoldDuration(prompt)
     if not prompt then return end
     pcall(function() prompt.HoldDuration = 0 end)
@@ -131,51 +94,33 @@ local function StopFastClick()
     if FastClickHeartbeat then FastClickHeartbeat:Disconnect() FastClickHeartbeat = nil end
     print("[AntiGuard] Fast Click: OFF")
 end
-
--- ==================================================
--- CFrame + Return (Anti Guard Protection + Camera Lock)
--- ==================================================
 local function CFrameAndReturn()
     local Hum, Root = GetHumanoid()
     if not Hum or not Root then
-        print("[AntiGuard] ⚠️ Humanoid or Root not found!")
+        print("[AntiGuard]  Humanoid or Root not found!")
         return
     end
 
     OriginalCFrame = Root.CFrame
-    print("[AntiGuard] 📍 Original Position:", OriginalCFrame.Position)
-
-    -- ✅ Lock Camera
+    print("[AntiGuard]  Original Position:", OriginalCFrame.Position)
     LockCamera()
-
-    -- ✅ CFrame ទៅ Safe Zone
     pcall(function()
         Root.CFrame = CFrame.new(SAFE_ZONE)
         Root.AssemblyLinearVelocity = Vector3.zero
         Root.AssemblyAngularVelocity = Vector3.zero
     end)
-    print("[AntiGuard] ✅ CFrame → Safe Zone:", SAFE_ZONE)
-
-    -- ✅ Wait 1s
+    print("[AntiGuard]  CFrame  Safe Zone:", SAFE_ZONE)
     task.wait(WAIT_AT_SAFE)
-
-    -- ✅ Return មក Position ដើម
     if OriginalCFrame then
         pcall(function()
             Root.CFrame = OriginalCFrame
             Root.AssemblyLinearVelocity = Vector3.zero
             Root.AssemblyAngularVelocity = Vector3.zero
         end)
-        print("[AntiGuard] ✅ Return → Original Position")
+        print("[AntiGuard]  Return  Original Position")
     end
-
-    -- ✅ Unlock Camera
     UnlockCamera()
 end
-
--- ==================================================
--- CHECK LOOP (True/False Loop)
--- ==================================================
 local function CheckLoop()
     print("[AntiGuard] CheckLoop Started")
     local DropHeldEgg = nil
@@ -190,17 +135,13 @@ local function CheckLoop()
 
         if DropHeldEgg then
             local CurrentState = DropHeldEgg.Enabled == true
-
-            -- ✅ True → CFrame Safe Zone + Camera Lock
             if CurrentState and not LastState then
-                print("[AntiGuard] ✅ Egg Collect = TRUE → CFrame Safe Zone")
+                print("[AntiGuard]  Egg Collect = TRUE  CFrame Safe Zone")
                 LastState = true
                 CFrameAndReturn()
             end
-
-            -- ✅ False → Reset
             if not CurrentState and LastState then
-                print("[AntiGuard] ❌ Egg Collect = FALSE → Reset")
+                print("[AntiGuard]  Egg Collect = FALSE  Reset")
                 LastState = false
             end
         end
@@ -208,10 +149,6 @@ local function CheckLoop()
 
     print("[AntiGuard] CheckLoop Stopped")
 end
-
--- ==================================================
--- ENABLE
--- ==================================================
 local function EnableAntiGuard()
     if AntiGuardEnabled then return end
     AntiGuardEnabled = true
@@ -227,10 +164,6 @@ local function EnableAntiGuard()
 
     print("[AntiGuard] ON")
 end
-
--- ==================================================
--- DISABLE
--- ==================================================
 local function DisableAntiGuard()
     if not AntiGuardEnabled then return end
     AntiGuardEnabled = false
@@ -246,18 +179,10 @@ local function DisableAntiGuard()
 
     print("[AntiGuard] OFF")
 end
-
--- ==================================================
--- TOGGLE
--- ==================================================
 local function ToggleAntiGuard()
     if AntiGuardEnabled then DisableAntiGuard() else EnableAntiGuard() end
 end
-
--- ==================================================
--- EXPORT
--- ==================================================
-_G.YOKUDO_AntiGuard = {
+_G.JAYJAY_AntiGuard = {
     Enable = EnableAntiGuard,
     Disable = DisableAntiGuard,
     Toggle = ToggleAntiGuard,
@@ -267,12 +192,8 @@ _G.YOKUDO_AntiGuard = {
     LockCamera = LockCamera,
     UnlockCamera = UnlockCamera,
 }
-
--- ==================================================
--- REGISTER WITH CHARACTER SYSTEM
--- ==================================================
-if _G.YOKUDO_CharacterSystem then
-    _G.YOKUDO_CharacterSystem:RegisterFeature({
+if _G.JAYJAY_CharacterSystem then
+    _G.JAYJAY_CharacterSystem:RegisterFeature({
         Name = "AntiGuard",
         Enable = EnableAntiGuard,
         Disable = DisableAntiGuard,
@@ -286,7 +207,7 @@ if _G.YOKUDO_CharacterSystem then
     })
 end
 
-print("✅ AntiGuard Feature Loaded (With Camera Lock)")
+print(" AntiGuard Feature Loaded (With Camera Lock)")
 print("   Safe Zone:", SAFE_ZONE)
 print("   Wait:", WAIT_AT_SAFE .. "s")
-print("   Camera: Lock → CFrame → Return → Unlock")
+print("   Camera: Lock  CFrame  Return  Unlock")

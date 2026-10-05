@@ -1,80 +1,44 @@
--- ==================================================
--- YOKUDO HUB | FEATURE | Don't Use It
--- ✅ WalkSpeed 800 + Fast Click + Egg Check (Poll)
--- ✅ BodyV + BodyG តែម្នាក់ឯង (គ្មាន Tween)
--- ✅ Speed 400/s | Fly Offset 80 | Position Y = 70
--- ✅ Egg Collect = True → Fly Loop P3 ↔ P1 (No Stop)
--- ✅ TIMEOUT = 3 ម៉ោង (10,800s)
--- ==================================================
-
+﻿
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local ProximityPromptService = game:GetService("ProximityPromptService")
 
 local Player = Players.LocalPlayer
-
--- ==================================================
--- SETTINGS
--- ==================================================
 local WALK_SPEED_VALUE = 800
 local TELEPORT_SPEED = 400
 local FLY_OFFSET = 80
 local WAIT_BETWEEN_POS = 0.1
 local CHECK_INTERVAL = 0.1
 local ARRIVE_DISTANCE = 3
-local TIMEOUT = 10800  -- ✅ 3 ម៉ោង
+local TIMEOUT = 10800  --  3 
 
 local BODY_VELOCITY_P = 5000
 local BODY_GYRO_P = 50000
 local BODY_GYRO_D = 2000
-
--- Positions (Y = 70)
 local POSITION_1 = Vector3.new(663, 70, -369)
 local POSITION_3 = Vector3.new(5974, 70, -368)
-
--- ==================================================
--- STATE
--- ==================================================
 local Enabled = false
-
--- WalkSpeed
 local WalkSpeedConnection = nil
 local OriginalWalkSpeed = 16
-
--- Fast Click
 local FastClickPromptConnection = nil
 local FastClickHeartbeatConnection = nil
 local FastClickCounter = 0
-
--- Egg Check
 local EggCheckThread = nil
 local DropHeldEgg = nil
 local EggCollectTriggered = false
-
--- Teleport
 local FlyConnection = nil
 local BodyVelocity = nil
 local BodyGyro = nil
 local FlyLoopRunning = false
 local FlySequence = 0
 local CurrentFlyStep = 1
-
--- Forward Declarations
 local StartFlyLoop
 local StopFly
-
--- ==================================================
--- GET HUMANOID
--- ==================================================
 local function GetHumanoid()
     local Char = Player.Character
     if not Char then return nil, nil end
     return Char:FindFirstChildOfClass("Humanoid"), Char:FindFirstChild("HumanoidRootPart")
 end
-
--- ==================================================
--- 1. WALK SPEED 800
--- ==================================================
 local function StartWalkSpeed()
     local Hum = GetHumanoid()
     if Hum then
@@ -101,10 +65,6 @@ local function StopWalkSpeed()
     if Hum then Hum.WalkSpeed = OriginalWalkSpeed end
     print("[Don't use it] WalkSpeed: OFF")
 end
-
--- ==================================================
--- 2. FAST CLICK
--- ==================================================
 local function ApplyHoldDuration(prompt)
     if not prompt then return end
     pcall(function() prompt.HoldDuration = 0 end)
@@ -150,10 +110,6 @@ local function StopFastClick()
     if FastClickHeartbeatConnection then FastClickHeartbeatConnection:Disconnect() FastClickHeartbeatConnection = nil end
     print("[Don't use it] Fast Click: OFF")
 end
-
--- ==================================================
--- 3. EGG CHECK (POLL)
--- ==================================================
 local function GetDropHeldEgg()
     local PG = Player:FindFirstChild("PlayerGui")
     if not PG then return nil end
@@ -179,11 +135,11 @@ local function StartEggCheckThread()
 
                 if IsCollected and not EggCollectTriggered then
                     EggCollectTriggered = true
-                    print("[Don't use it] ✅ Egg Collect = TRUE → Start Fly Loop")
+                    print("[Don't use it]  Egg Collect = TRUE  Start Fly Loop")
                     if StartFlyLoop then StartFlyLoop() end
                 elseif not IsCollected and EggCollectTriggered then
                     EggCollectTriggered = false
-                    print("[Don't use it] ❌ Egg Collect = FALSE → Stop Fly Loop")
+                    print("[Don't use it]  Egg Collect = FALSE  Stop Fly Loop")
                     if StopFly then StopFly() end
                 end
             end
@@ -200,10 +156,6 @@ local function StopEggCheckThread()
     end
     print("[Don't use it] Egg Check Thread: STOPPED")
 end
-
--- ==================================================
--- 4. CLEANUP MOVERS
--- ==================================================
 local function CleanupMovers(KeepPlatformStand)
     if FlyConnection then
         FlyConnection:Disconnect()
@@ -226,7 +178,7 @@ local function CleanupMovers(KeepPlatformStand)
     local Hum, Root = GetHumanoid()
     if Root then
         for _, c in ipairs(Root:GetChildren()) do
-            if c.Name == "YokudoBV" or c.Name == "YokudoBG" then
+            if c.Name == "JayjayBV" or c.Name == "JayjayBG" then
                 pcall(function() c:Destroy() end)
             end
         end
@@ -244,10 +196,6 @@ local function CleanupMovers(KeepPlatformStand)
         end)
     end
 end
-
--- ==================================================
--- 5. BODYV + BODYG FLY TP
--- ==================================================
 local function FlyTP(Destination, Callback)
     FlySequence = FlySequence + 1
     local Seq = FlySequence
@@ -266,14 +214,14 @@ local function FlyTP(Destination, Callback)
     Hum.PlatformStand = true
 
     BodyVelocity = Instance.new("BodyVelocity")
-    BodyVelocity.Name = "YokudoBV"
+    BodyVelocity.Name = "JayjayBV"
     BodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
     BodyVelocity.P = BODY_VELOCITY_P
     BodyVelocity.Velocity = Vector3.zero
     BodyVelocity.Parent = Root
 
     BodyGyro = Instance.new("BodyGyro")
-    BodyGyro.Name = "YokudoBG"
+    BodyGyro.Name = "JayjayBG"
     BodyGyro.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
     BodyGyro.P = BODY_GYRO_P
     BodyGyro.D = BODY_GYRO_D
@@ -333,15 +281,11 @@ local function FlyTP(Destination, Callback)
         BodyGyro.CFrame = CFrame.new(CurrentPos, CurrentPos + Vector3.new(Dir.X, 0, Dir.Z))
     end)
 end
-
--- ==================================================
--- 6. FLY LOOP (P3 ↔ P1 — No Stop)
--- ==================================================
 local function FlyLoopStep()
     if not Enabled or not FlyLoopRunning then return end
 
     if CurrentFlyStep == 1 then
-        print("[Don't use it] Fly → Position 3")
+        print("[Don't use it] Fly  Position 3")
         FlyTP(POSITION_3, function()
             if not Enabled or not FlyLoopRunning then return end
             task.wait(WAIT_BETWEEN_POS)
@@ -349,7 +293,7 @@ local function FlyLoopStep()
             FlyLoopStep()
         end)
     else
-        print("[Don't use it] Fly → Position 1")
+        print("[Don't use it] Fly  Position 1")
         FlyTP(POSITION_1, function()
             if not Enabled or not FlyLoopRunning then return end
             task.wait(WAIT_BETWEEN_POS)
@@ -364,7 +308,7 @@ StartFlyLoop = function()
     FlyLoopRunning = true
     CurrentFlyStep = 1
 
-    print("[Don't use it] ✅ Fly Loop STARTED (P3 ↔ P1 — No Stop)")
+    print("[Don't use it]  Fly Loop STARTED (P3  P1  No Stop)")
     FlyLoopStep()
 end
 
@@ -374,10 +318,6 @@ StopFly = function()
     CleanupMovers()
     print("[Don't use it] Fly Loop: STOPPED")
 end
-
--- ==================================================
--- ENABLE / DISABLE
--- ==================================================
 local function Enable()
     if Enabled then return end
     Enabled = true
@@ -412,11 +352,7 @@ end
 local function Toggle()
     if Enabled then Disable() else Enable() end
 end
-
--- ==================================================
--- EXPORT
--- ==================================================
-_G.YOKUDO_DontUseIt = {
+_G.JAYJAY_DontUseIt = {
     Enable = Enable,
     Disable = Disable,
     Toggle = Toggle,
@@ -426,12 +362,8 @@ _G.YOKUDO_DontUseIt = {
     TELEPORT_SPEED = TELEPORT_SPEED,
     FLY_OFFSET = FLY_OFFSET,
 }
-
--- ==================================================
--- REGISTER WITH CHARACTER SYSTEM
--- ==================================================
-if _G.YOKUDO_CharacterSystem then
-    _G.YOKUDO_CharacterSystem:RegisterFeature({
+if _G.JAYJAY_CharacterSystem then
+    _G.JAYJAY_CharacterSystem:RegisterFeature({
         Name = "DontUseIt",
         Enable = Enable,
         Disable = Disable,
@@ -447,4 +379,4 @@ if _G.YOKUDO_CharacterSystem then
     })
 end
 
-print("✅ DontUseIt Feature Loaded (BodyV + BodyG | Speed 400/s | Offset 80)")
+print(" DontUseIt Feature Loaded (BodyV + BodyG | Speed 400/s | Offset 80)")

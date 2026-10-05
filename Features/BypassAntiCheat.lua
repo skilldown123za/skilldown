@@ -1,50 +1,31 @@
--- ==================================================
--- YOKUDO HUB | FEATURE | Bypass Anti Cheat
--- Humanoid Replace + Anti Death
--- ✅ Re-apply ពេល Player Died + CharacterAdded
--- ==================================================
-
+﻿
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 
 local Player = Players.LocalPlayer
-
--- ==================================================
--- STATE
--- ==================================================
 local BypassEnabled = true
 local ReapplyThread = nil
 local DiedConnection = nil
 local CharacterConnection = nil
-
--- ==================================================
--- MAIN FUNCTION
--- ==================================================
 local function RunBypassAntiCheat()
     local Character = Player.Character
     if not Character then return end
 
     local OldHumanoid = Character:FindFirstChildOfClass("Humanoid")
     if not OldHumanoid then
-        warn("[YOKUDO] Humanoid not found")
+        warn("[JAYJAY] Humanoid not found")
         return
     end
-
-    -- ✅ Check បើ Humanoid ត្រូវ Replace រួចហើយ
-    local ExistingBypass = OldHumanoid:GetAttribute("YokudoBypass")
+    local ExistingBypass = OldHumanoid:GetAttribute("JayjayBypass")
     if ExistingBypass then
-        print("[YOKUDO] Bypass already applied → Skip")
+        print("[JAYJAY] Bypass already applied  Skip")
         return
     end
 
     print("========================================")
-    print("[YOKUDO] START HUMANOID REPLACE")
+    print("[JAYJAY] START HUMANOID REPLACE")
     print("========================================")
-
-    -- ANTI DEATH SETTINGS
     local GodMode = true
-
-    -- SAVE JUMP PROPERTIES
     local SavedJumpProperties = {}
 
     local function SaveJumpProperty(Property)
@@ -59,14 +40,10 @@ local function RunBypassAntiCheat()
     SaveJumpProperty("JumpPower")
     SaveJumpProperty("JumpHeight")
     SaveJumpProperty("UseJumpPower")
-
-    -- SAVE STATE MACHINE
     local SavedEvaluateStateMachine
     pcall(function()
         SavedEvaluateStateMachine = OldHumanoid.EvaluateStateMachine
     end)
-
-    -- SAVE ALL HUMANOID STATE SETTINGS
     local SavedStates = {}
     local States = {
         Enum.HumanoidStateType.FallingDown,
@@ -95,19 +72,13 @@ local function RunBypassAntiCheat()
             SavedStates[State] = Enabled
         end
     end
-
-    -- CLONE HUMANOID
     local NewHumanoid = OldHumanoid:Clone()
     if not NewHumanoid then
-        warn("[YOKUDO] Failed to clone Humanoid")
+        warn("[JAYJAY] Failed to clone Humanoid")
         return
     end
     NewHumanoid.Name = OldHumanoid.Name
-
-    -- ✅ Set Attribute ដើម្បីកុំឲ្យ Re-apply ច្រើនដង
-    NewHumanoid:SetAttribute("YokudoBypass", true)
-
-    -- MOVE HUMANOID CHILDREN
+    NewHumanoid:SetAttribute("JayjayBypass", true)
     for _, Child in ipairs(OldHumanoid:GetChildren()) do
         local ExistingCloneChild = NewHumanoid:FindFirstChild(Child.Name)
         if ExistingCloneChild then
@@ -119,28 +90,22 @@ local function RunBypassAntiCheat()
             Child.Parent = NewHumanoid
         end)
     end
-
-    -- REPLACEMENT ORDER
     OldHumanoid:Destroy()
     task.wait()
     NewHumanoid.Parent = Character
     task.wait()
 
     if not NewHumanoid.Parent then
-        warn("[YOKUDO] New Humanoid was removed")
+        warn("[JAYJAY] New Humanoid was removed")
         return
     end
 
-    print("[YOKUDO] New Humanoid:", NewHumanoid)
-
-    -- UPDATE CHARACTER SYSTEM
-    if _G.YOKUDO_CharacterSystem then
-        _G.YOKUDO_CharacterSystem.CurrentHumanoid = NewHumanoid
-        _G.YOKUDO_CharacterSystem.CurrentRoot = Character:FindFirstChild("HumanoidRootPart")
-        print("[YOKUDO] CharacterSystem Updated with New Humanoid")
+    print("[JAYJAY] New Humanoid:", NewHumanoid)
+    if _G.JAYJAY_CharacterSystem then
+        _G.JAYJAY_CharacterSystem.CurrentHumanoid = NewHumanoid
+        _G.JAYJAY_CharacterSystem.CurrentRoot = Character:FindFirstChild("HumanoidRootPart")
+        print("[JAYJAY] CharacterSystem Updated with New Humanoid")
     end
-
-    -- RESTORE JUMP PROPERTIES
     pcall(function()
         NewHumanoid.UseJumpPower = SavedJumpProperties.UseJumpPower
     end)
@@ -150,29 +115,21 @@ local function RunBypassAntiCheat()
     pcall(function()
         NewHumanoid.JumpHeight = SavedJumpProperties.JumpHeight
     end)
-
-    -- RESTORE EVALUATE STATE MACHINE
     pcall(function()
         if SavedEvaluateStateMachine ~= nil then
             NewHumanoid.EvaluateStateMachine = SavedEvaluateStateMachine
         end
     end)
-
-    -- RESTORE HUMANOID STATE SETTINGS
     for State, Enabled in pairs(SavedStates) do
         pcall(function()
             NewHumanoid:SetStateEnabled(State, Enabled)
         end)
     end
-
-    -- ENSURE ANIMATOR
     local Animator = NewHumanoid:FindFirstChildOfClass("Animator")
     if not Animator then
         Animator = Instance.new("Animator")
         Animator.Parent = NewHumanoid
     end
-
-    -- RESTART ANIMATE
     local Animate = Character:FindFirstChild("Animate")
     if Animate then
         pcall(function()
@@ -185,8 +142,6 @@ local function RunBypassAntiCheat()
     end
 
     task.wait(0.1)
-
-    -- ANTI DEATH FUNCTIONS
     local function LockHealth()
         if GodMode and NewHumanoid and NewHumanoid.Parent then
             pcall(function()
@@ -232,8 +187,6 @@ local function RunBypassAntiCheat()
     LockHealth()
     BlockDeathState()
     BindAntiDeath(NewHumanoid)
-
-    -- GOD MODE LOOP
     task.spawn(function()
         while BypassEnabled do
             task.wait(0.1)
@@ -247,8 +200,6 @@ local function RunBypassAntiCheat()
             end
         end
     end)
-
-    -- CONTROL MODULE REFRESH
     local function RefreshControls()
         local PlayerScripts = Player:FindFirstChild("PlayerScripts")
         if not PlayerScripts then return end
@@ -273,32 +224,24 @@ local function RunBypassAntiCheat()
     end
 
     RefreshControls()
-
-    -- CAMERA
     pcall(function()
         local Camera = workspace.CurrentCamera
         if Camera then
             Camera.CameraSubject = NewHumanoid
         end
     end)
-
-    -- ✅ RESTART FEATURES តាមរយៈ CHARACTER SYSTEM
-    if _G.YOKUDO_CharacterSystem then
+    if _G.JAYJAY_CharacterSystem then
         task.spawn(function()
             task.wait(0.3)
-            _G.YOKUDO_CharacterSystem:RestartAllFeatures()
+            _G.JAYJAY_CharacterSystem:RestartAllFeatures()
         end)
     end
 
     print("")
     print("========================================")
-    print("[YOKUDO] HUMANOID REPLACE + ANTI DEATH COMPLETE")
+    print("[JAYJAY] HUMANOID REPLACE + ANTI DEATH COMPLETE")
     print("========================================")
 end
-
--- ==================================================
--- ✅ SETUP DIED LISTENER (ភ្ជាប់ឡើងវិញពេល Player ស្លាប់)
--- ==================================================
 local function SetupDiedListener(Humanoid)
     if not Humanoid then return end
 
@@ -308,23 +251,15 @@ local function SetupDiedListener(Humanoid)
     end
 
     DiedConnection = Humanoid.Died:Connect(function()
-        print("[YOKUDO] ⚠️ Player Died → Re-apply Bypass")
-
-        -- ✅ រង់ចាំ 0.5s ឲ្យ Character ថ្មី Load
+        print("[JAYJAY]  Player Died  Re-apply Bypass")
         task.wait(0.5)
-
-        -- ✅ Re-apply Bypass
         task.spawn(function()
             RunBypassAntiCheat()
         end)
     end)
 
-    print("[YOKUDO] Died Listener Setup")
+    print("[JAYJAY] Died Listener Setup")
 end
-
--- ==================================================
--- ✅ SETUP CHARACTER ADDED LISTENER
--- ==================================================
 local function SetupCharacterListener()
     if CharacterConnection then
         CharacterConnection:Disconnect()
@@ -332,24 +267,16 @@ local function SetupCharacterListener()
     end
 
     CharacterConnection = Player.CharacterAdded:Connect(function(Character)
-        print("[YOKUDO] Character Added → Re-apply Bypass")
+        print("[JAYJAY] Character Added  Re-apply Bypass")
 
         task.wait(1)
-
-        -- ✅ Setup Died Listener សម្រាប់ Humanoid ថ្មី
         local Hum = Character:FindFirstChildOfClass("Humanoid")
         if Hum then
             SetupDiedListener(Hum)
         end
-
-        -- ✅ Re-apply Bypass
         RunBypassAntiCheat()
     end)
 end
-
--- ==================================================
--- ✅ SETUP DEATH LISTENER (Player Died)
--- ==================================================
 local function SetupHumanoidDiedCheck()
     task.spawn(function()
         while BypassEnabled do
@@ -359,7 +286,6 @@ local function SetupHumanoidDiedCheck()
             if Char then
                 local Hum = Char:FindFirstChildOfClass("Humanoid")
                 if Hum then
-                    -- ✅ Check បើមិនទាន់ Setup Died Listener
                     if not DiedConnection or not DiedConnection.Connected then
                         SetupDiedListener(Hum)
                     end
@@ -368,19 +294,11 @@ local function SetupHumanoidDiedCheck()
         end
     end)
 end
-
--- ==================================================
--- RUN IMMEDIATELY
--- ==================================================
 task.spawn(function()
     task.wait(2)
     RunBypassAntiCheat()
-
-    -- ✅ Setup Listeners
     SetupCharacterListener()
     SetupHumanoidDiedCheck()
-
-    -- ✅ Setup Died Listener សម្រាប់ Humanoid បច្ចុប្បន្ន
     local Char = Player.Character
     if Char then
         local Hum = Char:FindFirstChildOfClass("Humanoid")
@@ -390,4 +308,4 @@ task.spawn(function()
     end
 end)
 
-print("✅ BypassAntiCheat Feature Loaded (Died Re-apply)")
+print(" BypassAntiCheat Feature Loaded (Died Re-apply)")

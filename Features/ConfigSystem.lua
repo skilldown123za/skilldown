@@ -1,24 +1,9 @@
---==================================================
--- YOKUDO HUB - CONFIG SYSTEM (EMPTY)
--- ✅ ដក AttackDroneEnabled + SafeSpeedMode ចេញទាំងស្រុង
--- ✅ គ្មាន Save/Load អ្វីទេ
--- Folder: YOKUDO-SAE
--- File: yokudo.json
---==================================================
-
+﻿
 local HttpService = game:GetService("HttpService")
 
-local CONFIG_FOLDER = "YOKUDO-SAE"
-local CONFIG_FILE = CONFIG_FOLDER .. "/yokudo.json"
-
---==================================================
--- DEFAULT CONFIG (ទទេ)
---==================================================
+local CONFIG_FOLDER = "JAYJAY-SAE"
+local CONFIG_FILE = CONFIG_FOLDER .. "/jayjay.json"
 local DefaultConfig = {}
-
---==================================================
--- FILE HELPERS
---==================================================
 local function EnsureFolder()
     pcall(function()
         if not isfolder(CONFIG_FOLDER) then
@@ -34,19 +19,11 @@ local function FileExists(Path)
     end)
     return Exists
 end
-
---==================================================
--- LOAD CONFIG (ទទេ)
---==================================================
 local function LoadConfig()
     EnsureFolder()
-    print("[YOKUDO] Config Loaded (Empty)")
+    print("[JAYJAY] Config Loaded (Empty)")
     return {}
 end
-
---==================================================
--- SAVE CONFIG (ទទេ)
---==================================================
 local function SaveConfig(Config)
     EnsureFolder()
 
@@ -57,7 +34,7 @@ local function SaveConfig(Config)
     end)
 
     if not EncodeSuccess then
-        warn("[YOKUDO] Failed to encode config")
+        warn("[JAYJAY] Failed to encode config")
         return false
     end
 
@@ -66,31 +43,18 @@ local function SaveConfig(Config)
     end)
 
     if WriteSuccess then
-        print("[YOKUDO] Config Saved (Empty)")
+        print("[JAYJAY] Config Saved (Empty)")
         return true
     else
-        warn("[YOKUDO] Failed to write config")
+        warn("[JAYJAY] Failed to write config")
         return false
     end
 end
-
---==================================================
--- APPLY CONFIG (ទទេ)
---==================================================
 local function ApplyConfig(Config)
-    -- គ្មាន Apply អ្វីទេ
 end
-
---==================================================
--- INITIAL LOAD
---==================================================
 local LoadedConfig = LoadConfig()
 ApplyConfig(LoadedConfig)
-
---==================================================
--- EXPORT
---==================================================
-_G.YOKUDO_ConfigSystem = {
+_G.JAYJAY_ConfigSystem = {
     Folder = CONFIG_FOLDER,
     File = CONFIG_FILE,
     Default = DefaultConfig,
@@ -101,18 +65,14 @@ _G.YOKUDO_ConfigSystem = {
 
         task.spawn(function()
             task.wait(0.5)
-
-            -- ✅ Update Event Tab UI
             pcall(function()
-                if _G.YOKUDO_RefreshEventUI then
-                    _G.YOKUDO_RefreshEventUI()
+                if _G.JAYJAY_RefreshEventUI then
+                    _G.JAYJAY_RefreshEventUI()
                 end
             end)
-
-            -- ✅ Update Setting Tab UI
             pcall(function()
-                if _G.YOKUDO_RefreshSettingUI then
-                    _G.YOKUDO_RefreshSettingUI()
+                if _G.JAYJAY_RefreshSettingUI then
+                    _G.JAYJAY_RefreshSettingUI()
                 end
             end)
         end)
@@ -134,4 +94,4 @@ _G.YOKUDO_ConfigSystem = {
     end
 }
 
-print("✅ ConfigSystem Loaded (Empty — No AttackDrone/SafeSpeedMode)")
+print(" ConfigSystem Loaded (Empty  No AttackDrone/SafeSpeedMode)")

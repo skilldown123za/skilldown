@@ -1,36 +1,17 @@
--- ==================================================
--- YOKUDO HUB | FEATURE | Speed Lock System (v6 FINAL)
--- ✅ Emoji 🔒 លើ Button ពេល Speed < 1B
--- ✅ ដក 🔒 ចេញ ពេល Speed ≥ 1B
--- ✅ Show Message
--- ✅ Safe Call
--- ==================================================
-
+﻿
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local CoreGui = game:GetService("CoreGui")
 
 local Player = Players.LocalPlayer
-
--- ==================================================
--- CONFIG
--- ==================================================
 local CONFIG = {
     RequiredSpeed = 1000000000,  -- 1B
     MessageDuration = 5,
 }
-
--- ==================================================
--- STATE
--- ==================================================
 local IsUnlocked = false
 local SpeedValue = nil
 local LockedButtons = {}
-local OriginalButtonData = {}  -- ✅ Store Original Data
-
--- ==================================================
--- SAFE CALL
--- ==================================================
+local OriginalButtonData = {}  --  Store Original Data
 local function SafeCall(func, ...)
     if not func then return false end
     local args = {...}
@@ -42,10 +23,6 @@ local function SafeCall(func, ...)
     end
     return Success
 end
-
--- ==================================================
--- GET SPEED VALUE
--- ==================================================
 local function GetSpeedValue()
     local Leaderstats = Player:FindFirstChild("leaderstats")
     if Leaderstats then
@@ -65,10 +42,6 @@ local function GetSpeedValue()
     
     return nil
 end
-
--- ==================================================
--- FORMAT NUMBER
--- ==================================================
 local function FormatNumber(num)
     if type(num) ~= "number" then return tostring(num) end
     
@@ -84,30 +57,22 @@ local function FormatNumber(num)
         return tostring(math.floor(num))
     end
 end
-
--- ==================================================
--- CHECK SPEED
--- ==================================================
 local function CheckSpeed()
     SpeedValue = GetSpeedValue()
     
     if not SpeedValue then
-        warn("[SpeedLock] ⚠️ Speed Value not found!")
+        warn("[SpeedLock]  Speed Value not found!")
         return false
     end
     
     local CurrentSpeed = math.floor(tonumber(SpeedValue.Value) or 0)
     local RequiredSpeed = math.floor(CONFIG.RequiredSpeed)
     
-    print("[SpeedLock] 📊 Current:", FormatNumber(CurrentSpeed))
-    print("[SpeedLock] 📊 Required:", FormatNumber(RequiredSpeed))
+    print("[SpeedLock]  Current:", FormatNumber(CurrentSpeed))
+    print("[SpeedLock]  Required:", FormatNumber(RequiredSpeed))
     
     return CurrentSpeed >= RequiredSpeed
 end
-
--- ==================================================
--- SHOW MESSAGE
--- ==================================================
 local function ShowMessage(Text, Duration)
     pcall(function()
         local Old = CoreGui:FindFirstChild("SpeedLockMessage")
@@ -182,14 +147,8 @@ local function ShowMessage(Text, Duration)
         end
     end)
 end
-
--- ==================================================
--- REGISTER LOCKABLE BUTTON
--- ==================================================
 local function RegisterLockableButton(Button, Name)
     if not Button then return end
-    
-    -- ✅ Store Original Data
     table.insert(OriginalButtonData, {
         Button = Button,
         OriginalText = Button.Text,
@@ -205,48 +164,32 @@ local function RegisterLockableButton(Button, Name)
         Name = Name or Button.Name,
     })
     
-    print("[SpeedLock] 📝 Registered:", Name or Button.Name)
+    print("[SpeedLock]  Registered:", Name or Button.Name)
 end
-
--- ==================================================
--- ✅ APPLY LOCK (ដាក់ Emoji 🔒)
--- ==================================================
 local function ApplyLockToAll()
     for _, data in ipairs(LockedButtons) do
         local Button = data.Button
         if Button and Button.Parent then
-            -- ✅ ដាក់ Emoji 🔒 លើ Button
-            Button.Text = "🔒"
+            Button.Text = ""
             Button.TextSize = 20
             Button.TextColor3 = Color3.fromRGB(255, 80, 80)
             Button.Font = Enum.Font.GothamBold
-            
-            -- ✅ Background ក្រហមស្រាល
             Button.BackgroundColor3 = Color3.fromRGB(40, 20, 20)
             Button.BackgroundTransparency = 0.3
-            
-            -- ✅ Stroke ក្រហម
             local Stroke = Button:FindFirstChildOfClass("UIStroke")
             if Stroke then
                 Stroke.Color = Color3.fromRGB(255, 80, 80)
                 Stroke.Thickness = 2
                 Stroke.Transparency = 0.2
             end
-            
-            -- ✅ Disable Button
             Button.Active = false
             Button.Selectable = false
         end
     end
     
-    print("[SpeedLock] 🔒 Applied Lock to", #LockedButtons, "buttons")
+    print("[SpeedLock]  Applied Lock to", #LockedButtons, "buttons")
 end
-
--- ==================================================
--- ✅ REMOVE LOCK (ដក Emoji 🔒 ចេញ)
--- ==================================================
 local function RemoveLockFromAll()
-    -- ✅ Restore Original Data
     for _, data in ipairs(OriginalButtonData) do
         local Button = data.Button
         if Button and Button.Parent then
@@ -257,8 +200,6 @@ local function RemoveLockFromAll()
             
             Button.BackgroundColor3 = data.OriginalBackgroundColor3 or Color3.fromRGB(28, 29, 39)
             Button.BackgroundTransparency = data.OriginalBackgroundTransparency or 0
-            
-            -- ✅ Stroke ត្រលប់ដើម
             local Stroke = Button:FindFirstChildOfClass("UIStroke")
             if Stroke then
                 Stroke.Color = Color3.fromRGB(200, 200, 220)
@@ -271,33 +212,25 @@ local function RemoveLockFromAll()
         end
     end
     
-    print("[SpeedLock] 🔓 Removed Lock from", #LockedButtons, "buttons")
+    print("[SpeedLock]  Removed Lock from", #LockedButtons, "buttons")
 end
-
--- ==================================================
--- MAIN CHECK
--- ==================================================
 local function RunCheck()
     print("[SpeedLock] ================================")
-    print("[SpeedLock] 🔍 Checking Speed...")
+    print("[SpeedLock]  Checking Speed...")
     print("[SpeedLock] ================================")
     
     IsUnlocked = CheckSpeed()
     
     if IsUnlocked then
-        print("[SpeedLock] 🎉 UNLOCKED!")
+        print("[SpeedLock]  UNLOCKED!")
         RemoveLockFromAll()
     else
-        print("[SpeedLock] 🔒 LOCKED!")
+        print("[SpeedLock]  LOCKED!")
         ApplyLockToAll()
     end
     
     print("[SpeedLock] ================================")
 end
-
--- ==================================================
--- PUBLIC API
--- ==================================================
 local SpeedLock = {}
 
 SpeedLock.IsUnlocked = function() return IsUnlocked end
@@ -313,10 +246,6 @@ SpeedLock.RegisterLockable = RegisterLockableButton
 SpeedLock.RunCheck = RunCheck
 SpeedLock.ApplyLock = ApplyLockToAll
 SpeedLock.RemoveLock = RemoveLockFromAll
+_G.JAYJAY_SpeedLock = SpeedLock
 
--- ==================================================
--- EXPORT
--- ==================================================
-_G.YOKUDO_SpeedLock = SpeedLock
-
-print("✅ Speed Lock System Loaded (v6 — Emoji 🔒)")
+print(" Speed Lock System Loaded (v6  Emoji )")

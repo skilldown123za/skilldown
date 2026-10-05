@@ -1,43 +1,23 @@
--- ==================================================
--- YOKUDO HUB | FEATURE | Walk Speed
--- ✅ Register ជាមួយ CharacterSystem
--- ==================================================
-
+﻿
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 
 local Player = Players.LocalPlayer
-
--- ==================================================
--- VARIABLES
--- ==================================================
 local WalkSpeedEnabled = false
 local WalkSpeedValue = 50
 local OriginalWalkSpeed = 16
 local Connection = nil
-
--- ==================================================
--- GET HUMANOID
--- ==================================================
 local function GetHumanoid()
     local Char = Player.Character
     if not Char then return nil end
     return Char:FindFirstChildOfClass("Humanoid")
 end
-
--- ==================================================
--- APPLY WALK SPEED
--- ==================================================
 local function ApplyWalkSpeed()
     local Hum = GetHumanoid()
     if Hum then
         Hum.WalkSpeed = WalkSpeedValue
     end
 end
-
--- ==================================================
--- STOP WALK SPEED
--- ==================================================
 local function StopWalkSpeed()
     local Hum = GetHumanoid()
     if Hum then
@@ -48,10 +28,6 @@ local function StopWalkSpeed()
         Connection = nil
     end
 end
-
--- ==================================================
--- START WALK SPEED
--- ==================================================
 local function StartWalkSpeed()
     local Hum = GetHumanoid()
     if Hum then
@@ -70,52 +46,36 @@ local function StartWalkSpeed()
         end
     end)
 end
-
--- ==================================================
--- SET VALUE
--- ==================================================
 local function SetWalkSpeedValue(Value)
     WalkSpeedValue = math.clamp(Value, 50, 1000)
     if WalkSpeedEnabled then
         ApplyWalkSpeed()
     end
-    print("[YOKUDO] Walk Speed Value: " .. WalkSpeedValue)
+    print("[JAYJAY] Walk Speed Value: " .. WalkSpeedValue)
 end
-
--- ==================================================
--- TOGGLE FUNCTION
--- ==================================================
 local function ToggleWalkSpeed()
     WalkSpeedEnabled = not WalkSpeedEnabled
     
     if WalkSpeedEnabled then
         StartWalkSpeed()
-        print("[YOKUDO] Walk Speed: ON (" .. WalkSpeedValue .. ")")
+        print("[JAYJAY] Walk Speed: ON (" .. WalkSpeedValue .. ")")
     else
         StopWalkSpeed()
-        print("[YOKUDO] Walk Speed: OFF")
+        print("[JAYJAY] Walk Speed: OFF")
     end
 end
-
--- ==================================================
--- ENABLE / DISABLE
--- ==================================================
 local function EnableWalkSpeed()
     WalkSpeedEnabled = true
     StartWalkSpeed()
-    print("[YOKUDO] Walk Speed: ON (" .. WalkSpeedValue .. ")")
+    print("[JAYJAY] Walk Speed: ON (" .. WalkSpeedValue .. ")")
 end
 
 local function DisableWalkSpeed()
     WalkSpeedEnabled = false
     StopWalkSpeed()
-    print("[YOKUDO] Walk Speed: OFF")
+    print("[JAYJAY] Walk Speed: OFF")
 end
-
--- ==================================================
--- EXPORT
--- ==================================================
-_G.YOKUDO_WalkSpeed = {
+_G.JAYJAY_WalkSpeed = {
     Toggle = ToggleWalkSpeed,
     Enable = EnableWalkSpeed,
     Disable = DisableWalkSpeed,
@@ -126,4 +86,4 @@ _G.YOKUDO_WalkSpeed = {
 
 
 
-print("✅ WalkSpeed Feature Loaded (Register)")
+print(" WalkSpeed Feature Loaded (Register)")

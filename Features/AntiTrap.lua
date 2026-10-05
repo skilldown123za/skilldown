@@ -1,20 +1,7 @@
--- ==================================================
--- YOKUDO HUB | FEATURE | Anti Trap
--- ✅ Remove ONLY "PlayerTrap" Prefix in workspace.Transient
--- ✅ Loop រាល់ 0.5s
--- ==================================================
-
+﻿
 local AntiTrapEnabled = false
 local RemoveThread = nil
-
--- ==================================================
--- PREFIX FILTER
--- ==================================================
 local TRAP_PREFIX = "PlayerTrap"
-
--- ==================================================
--- REMOVE ONLY TRAP CHILDREN
--- ==================================================
 local function RemoveTrapChildren()
     local Transient = workspace:FindFirstChild("Transient")
     if not Transient then return 0 end
@@ -31,18 +18,10 @@ local function RemoveTrapChildren()
 
     return Count
 end
-
--- ==================================================
--- ENABLE
--- ==================================================
 local function EnableAntiTrap()
     if AntiTrapEnabled then return end
     AntiTrapEnabled = true
-
-    -- ✅ លុបភ្លាមម្តង
     RemoveTrapChildren()
-
-    -- ✅ Loop រាល់ 0.5s
     if RemoveThread then
         pcall(function() task.cancel(RemoveThread) end)
         RemoveThread = nil
@@ -62,10 +41,6 @@ local function EnableAntiTrap()
 
     print("[AntiTrap] ON")
 end
-
--- ==================================================
--- DISABLE
--- ==================================================
 local function DisableAntiTrap()
     if not AntiTrapEnabled then return end
     AntiTrapEnabled = false
@@ -77,10 +52,6 @@ local function DisableAntiTrap()
 
     print("[AntiTrap] OFF")
 end
-
--- ==================================================
--- TOGGLE
--- ==================================================
 local function ToggleAntiTrap()
     if AntiTrapEnabled then
         DisableAntiTrap()
@@ -88,11 +59,7 @@ local function ToggleAntiTrap()
         EnableAntiTrap()
     end
 end
-
--- ==================================================
--- EXPORT
--- ==================================================
-_G.YOKUDO_AntiTrap = {
+_G.JAYJAY_AntiTrap = {
     Toggle = ToggleAntiTrap,
     Enable = EnableAntiTrap,
     Disable = DisableAntiTrap,
@@ -101,4 +68,4 @@ _G.YOKUDO_AntiTrap = {
     TRAP_PREFIX = TRAP_PREFIX,
 }
 
-print("✅ AntiTrap Feature Loaded (PlayerTrap Only)")
+print(" AntiTrap Feature Loaded (PlayerTrap Only)")
