@@ -1,22 +1,9 @@
---==================================================
--- YOKUDO HUB | TAB | Event
--- Feature: Auto Attack Drone
--- ✅ ដក Auto Save Config ចេញ (ManagerDrone មិនពាក់ព័ន្ធ Config)
---==================================================
-
-local TabsManager = _G.YOKUDO_TabsManager
+﻿
+local TabsManager = _G.JAYJAY_TabsManager
 local TweenService = game:GetService("TweenService")
 
 local EventTab, EventPage = TabsManager:RegisterTab("Event", 5, "EVENT")
-
---==================================================
--- CONTENT
---==================================================
 CreateSectionTitle(EventPage, "Event", 1)
-
---==================================================
--- FEATURE: AUTO ATTACK DRONE (Checkbox)
---==================================================
 local ManagerHolder = Instance.new("Frame")
 ManagerHolder.Size = UDim2.new(1, 0, 0, 52)
 ManagerHolder.BackgroundTransparency = 1
@@ -67,16 +54,12 @@ ManagerStroke.Parent = ManagerButton
 local ManagerCheck = Instance.new("TextLabel")
 ManagerCheck.Size = UDim2.new(1, 0, 1, 0)
 ManagerCheck.BackgroundTransparency = 1
-ManagerCheck.Text = "✓"
+ManagerCheck.Text = ""
 ManagerCheck.TextColor3 = Color3.fromRGB(255, 255, 255)
 ManagerCheck.TextSize = 18
 ManagerCheck.Font = Enum.Font.GothamBold
 ManagerCheck.Visible = false
 ManagerCheck.Parent = ManagerButton
-
---==================================================
--- ✅ UPDATE UI FUNCTION
---==================================================
 local function UpdateManagerUI(State)
     ManagerCheck.Visible = State
     if State then
@@ -89,59 +72,45 @@ local function UpdateManagerUI(State)
 end
 
 ManagerButton.MouseButton1Click:Connect(function()
-    if not _G.YOKUDO_ManagerDrone then
-        warn("[YOKUDO] ManagerDrone not loaded!")
+    if not _G.JAYJAY_ManagerDrone then
+        warn("[JAYJAY] ManagerDrone not loaded!")
         return
     end
 
-    local NewState = not _G.YOKUDO_ManagerDrone.IsEnabled()
+    local NewState = not _G.JAYJAY_ManagerDrone.IsEnabled()
     UpdateManagerUI(NewState)
-
-    -- ✅ Call Enable/Disable (មិន Save Config)
     if NewState then
-        _G.YOKUDO_ManagerDrone.Enable()
+        _G.JAYJAY_ManagerDrone.Enable()
     else
-        _G.YOKUDO_ManagerDrone.Disable()
+        _G.JAYJAY_ManagerDrone.Disable()
     end
 end)
-
---==================================================
--- ✅ SYNC STATE ON LOAD
---==================================================
 task.spawn(function()
     task.wait(1)
-    if _G.YOKUDO_ManagerDrone then
-        local State = _G.YOKUDO_ManagerDrone.IsEnabled()
+    if _G.JAYJAY_ManagerDrone then
+        local State = _G.JAYJAY_ManagerDrone.IsEnabled()
         UpdateManagerUI(State)
     end
 end)
-
---==================================================
--- ✅ REFRESH FUNCTION
---==================================================
-_G.YOKUDO_RefreshEventUI = function()
-    if _G.YOKUDO_ManagerDrone then
-        local State = _G.YOKUDO_ManagerDrone.IsEnabled()
+_G.JAYJAY_RefreshEventUI = function()
+    if _G.JAYJAY_ManagerDrone then
+        local State = _G.JAYJAY_ManagerDrone.IsEnabled()
         UpdateManagerUI(State)
-        print("[YOKUDO] Event Tab UI Refreshed | State: " .. tostring(State))
+        print("[JAYJAY] Event Tab UI Refreshed | State: " .. tostring(State))
     end
 end
-
---==================================================
--- ✅ PERIODIC SYNC
---==================================================
 task.spawn(function()
     while task.wait(1) do
-        if _G.YOKUDO_ManagerDrone then
-            local CurrentState = _G.YOKUDO_ManagerDrone.IsEnabled()
+        if _G.JAYJAY_ManagerDrone then
+            local CurrentState = _G.JAYJAY_ManagerDrone.IsEnabled()
             local UIState = ManagerCheck.Visible
 
             if CurrentState ~= UIState then
                 UpdateManagerUI(CurrentState)
-                print("[YOKUDO] Event UI Sync | State: " .. tostring(CurrentState))
+                print("[JAYJAY] Event UI Sync | State: " .. tostring(CurrentState))
             end
         end
     end
 end)
 
-print("✅ Event Tab Loaded")
+print(" Event Tab Loaded")

@@ -1,24 +1,11 @@
--- ==================================================
--- YOKUDO HUB | TAB | Don't Use It
--- ✅ CheckBox → Show/Hide Floating Toggle
--- ✅ Floating Toggle ចុច ON/OFF → Feature Enable/Disable
--- ==================================================
-
-local TabsManager = _G.YOKUDO_TabsManager
+﻿
+local TabsManager = _G.JAYJAY_TabsManager
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
 local TweenService = game:GetService("TweenService")
 
 local DontUseItTab, DontUseItPage = TabsManager:RegisterTab("Don't Use It", 8, "DONT_USE_IT")
-
--- ==================================================
--- CONTENT
--- ==================================================
 CreateSectionTitle(DontUseItPage, "Don't Use It", 1)
-
--- ==================================================
--- FEATURE: Show Floating Toggle (CheckBox)
--- ==================================================
 local ShowHolder = Instance.new("Frame")
 ShowHolder.Size = UDim2.new(1, 0, 0, 52)
 ShowHolder.BackgroundTransparency = 1
@@ -69,16 +56,12 @@ ShowStroke.Parent = ShowButton
 local ShowCheck = Instance.new("TextLabel")
 ShowCheck.Size = UDim2.new(1, 0, 1, 0)
 ShowCheck.BackgroundTransparency = 1
-ShowCheck.Text = "✓"
+ShowCheck.Text = ""
 ShowCheck.TextColor3 = Color3.fromRGB(255, 255, 255)
 ShowCheck.TextSize = 18
 ShowCheck.Font = Enum.Font.GothamBold
 ShowCheck.Visible = false
 ShowCheck.Parent = ShowButton
-
--- ==================================================
--- FLOATING TOGGLE
--- ==================================================
 local FloatingGui = nil
 local FloatingFrame = nil
 local FloatingLabel = nil
@@ -88,7 +71,7 @@ local function CreateFloatingToggle()
     if FloatingGui then return end
 
     FloatingGui = Instance.new("ScreenGui")
-    FloatingGui.Name = "YokudoFloatingToggle"
+    FloatingGui.Name = "JayjayFloatingToggle"
     FloatingGui.ResetOnSpawn = false
     FloatingGui.IgnoreGuiInset = true
     FloatingGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -129,10 +112,6 @@ local function CreateFloatingToggle()
     FloatingLabel.Font = Enum.Font.GothamBold
     FloatingLabel.Active = false
     FloatingLabel.Parent = FloatingFrame
-
-    -- ==================================================
-    -- CLICK TOGGLE ON/OFF
-    -- ==================================================
     FloatingFrame.MouseButton1Click:Connect(function()
         FloatingEnabled = not FloatingEnabled
 
@@ -140,10 +119,8 @@ local function CreateFloatingToggle()
             FloatingFrame.BackgroundColor3 = Color3.fromRGB(105, 90, 190)
             FloatingFrame.Stroke.Color = Color3.fromRGB(135, 120, 225)
             FloatingLabel.Text = "Don't use it : ON"
-
-            -- ✅ Enable Feature
-            if _G.YOKUDO_DontUseIt then
-                _G.YOKUDO_DontUseIt.Enable()
+            if _G.JAYJAY_DontUseIt then
+                _G.JAYJAY_DontUseIt.Enable()
             end
 
             print("[Don't Use It] Toggle: ON")
@@ -151,19 +128,13 @@ local function CreateFloatingToggle()
             FloatingFrame.BackgroundColor3 = Color3.fromRGB(28, 29, 39)
             FloatingFrame.Stroke.Color = Color3.fromRGB(200, 200, 220)
             FloatingLabel.Text = "Don't use it : OFF"
-
-            -- ✅ Disable Feature
-            if _G.YOKUDO_DontUseIt then
-                _G.YOKUDO_DontUseIt.Disable()
+            if _G.JAYJAY_DontUseIt then
+                _G.JAYJAY_DontUseIt.Disable()
             end
 
             print("[Don't Use It] Toggle: OFF")
         end
     end)
-
-    -- ==================================================
-    -- DRAG SYSTEM
-    -- ==================================================
     local Dragging = false
     local DragStart = nil
     local StartPos = nil
@@ -234,10 +205,6 @@ local function HideFloatingToggle()
         FloatingGui.Enabled = false
     end
 end
-
--- ==================================================
--- CHECKBOX TOGGLE
--- ==================================================
 local ShowEnabled = false
 
 local function ToggleShow()
@@ -260,15 +227,11 @@ end
 ShowButton.MouseButton1Click:Connect(function()
     ToggleShow()
 end)
-
--- ==================================================
--- EXPORT
--- ==================================================
-_G.YOKUDO_FloatingToggle = {
+_G.JAYJAY_FloatingToggle = {
     Show = ShowFloatingToggle,
     Hide = HideFloatingToggle,
     IsVisible = function() return ShowEnabled end,
     IsToggled = function() return FloatingEnabled end,
 }
 
-print("✅ Don't Use It Tab Loaded")
+print(" Don't Use It Tab Loaded")

@@ -1,9 +1,5 @@
--- ==================================================
--- YOKUDO HUB | TAB | Hop Server
--- Feature: Check Hop Server Low Player
--- ==================================================
-
-local TabsManager = _G.YOKUDO_TabsManager
+﻿
+local TabsManager = _G.JAYJAY_TabsManager
 local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
@@ -11,15 +7,7 @@ local TeleportService = game:GetService("TeleportService")
 local PLACE_ID = 107778070777162
 
 local HopServerTab, HopServerPage = TabsManager:RegisterTab("Hop Server", 6, "HOP_SERVER")
-
--- ==================================================
--- CONTENT
--- ==================================================
 CreateSectionTitle(HopServerPage, "Hop Server", 1)
-
--- ==================================================
--- FEATURE: Check Hop Server Low Player
--- ==================================================
 local FeatureHolder = Instance.new("Frame")
 FeatureHolder.Size = UDim2.new(1, 0, 0, 60)
 FeatureHolder.BackgroundColor3 = Color3.fromRGB(28, 29, 42)
@@ -92,10 +80,6 @@ ClickBtn.MouseLeave:Connect(function()
         BackgroundColor3 = Color3.fromRGB(105, 90, 190)
     }):Play()
 end)
-
--- ==================================================
--- SERVER LIST (Scroll)
--- ==================================================
 local ServerScroll = Instance.new("ScrollingFrame")
 ServerScroll.Size = UDim2.new(1, 0, 0, 220)
 ServerScroll.BackgroundTransparency = 1
@@ -113,10 +97,6 @@ local ServerListLayout = Instance.new("UIListLayout")
 ServerListLayout.Padding = UDim.new(0, 4)
 ServerListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 ServerListLayout.Parent = ServerScroll
-
--- ==================================================
--- CLEAR LIST
--- ==================================================
 local function ClearList()
     for _, child in ipairs(ServerScroll:GetChildren()) do
         if child:IsA("Frame") then
@@ -124,10 +104,6 @@ local function ClearList()
         end
     end
 end
-
--- ==================================================
--- CREATE SERVER ENTRY
--- ==================================================
 local function CreateEntry(index, server)
     local Entry = Instance.new("Frame")
     Entry.Size = UDim2.new(1, -6, 0, 52)
@@ -145,8 +121,6 @@ local function CreateEntry(index, server)
     EntryStroke.Thickness = 1
     EntryStroke.Transparency = 0.6
     EntryStroke.Parent = Entry
-
-    -- លេខរៀង
     local IndexLabel = Instance.new("TextLabel")
     IndexLabel.Size = UDim2.new(0, 26, 1, 0)
     IndexLabel.Position = UDim2.new(0, 6, 0, 0)
@@ -158,8 +132,6 @@ local function CreateEntry(index, server)
     IndexLabel.TextXAlignment = Enum.TextXAlignment.Center
     IndexLabel.TextYAlignment = Enum.TextYAlignment.Center
     IndexLabel.Parent = Entry
-
-    -- Jobid
     local JobLabel = Instance.new("TextLabel")
     JobLabel.Size = UDim2.new(1, -110, 1, 0)
     JobLabel.Position = UDim2.new(0, 36, 0, 0)
@@ -172,8 +144,6 @@ local function CreateEntry(index, server)
     JobLabel.TextYAlignment = Enum.TextYAlignment.Center
     JobLabel.TextTruncate = Enum.TextTruncate.AtEnd
     JobLabel.Parent = Entry
-
-    -- Join Button
     local JoinBtn = Instance.new("TextButton")
     JoinBtn.Size = UDim2.new(0, 60, 0, 30)
     JoinBtn.Position = UDim2.new(1, -68, 0.5, -15)
@@ -222,10 +192,6 @@ local function CreateEntry(index, server)
         end
     end)
 end
-
--- ==================================================
--- FETCH SERVERS (ASC ONLY, PLAYER = 1)
--- ==================================================
 local function FetchServers()
     local allServers = {}
     local seen = {}
@@ -269,10 +235,6 @@ local function FetchServers()
 
     return allServers
 end
-
--- ==================================================
--- SEARCH FUNCTION
--- ==================================================
 ClickBtn.MouseButton1Click:Connect(function()
     FeatureStatus.Text = "Searching fresh servers..."
     FeatureStatus.TextColor3 = Color3.fromRGB(150, 150, 170)
@@ -298,4 +260,4 @@ ClickBtn.MouseButton1Click:Connect(function()
     FeatureStatus.TextColor3 = Color3.fromRGB(0, 255, 105)
 end)
 
-print("✅ Hop Server Tab Loaded")
+print(" Hop Server Tab Loaded")

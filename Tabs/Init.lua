@@ -1,7 +1,4 @@
--- ==================================================
--- YOKUDO HUB | TABS MANAGER
--- ==================================================
-
+﻿
 local TweenService = game:GetService("TweenService")
 
 local TabsManager = {}
@@ -9,10 +6,6 @@ TabsManager.Tabs = {}
 TabsManager.Pages = {}
 TabsManager.ActiveTab = nil
 TabsManager.ActivePage = nil
-
--- ==================================================
--- REGISTER TAB
--- ==================================================
 function TabsManager:RegisterTab(Name, Order, PageName)
     local Tab = CreateTab(Name, Order)
     local Page = CreatePage(PageName or Name:upper())
@@ -25,10 +18,6 @@ function TabsManager:RegisterTab(Name, Order, PageName)
     
     return Tab, Page
 end
-
--- ==================================================
--- SELECT TAB
--- ==================================================
 function TabsManager:SelectTab(SelectedTab, SelectedPage)
     for _, data in ipairs(self.Tabs) do
         data.Page.Visible = false
@@ -62,10 +51,6 @@ function TabsManager:SelectTab(SelectedTab, SelectedPage)
     self.ActiveTab = SelectedTab
     self.ActivePage = SelectedPage
 end
-
--- ==================================================
--- GET TAB BY NAME
--- ==================================================
 function TabsManager:GetTab(Name)
     for _, data in ipairs(self.Tabs) do
         if data.Name == Name then
@@ -74,20 +59,12 @@ function TabsManager:GetTab(Name)
     end
     return nil, nil
 end
-
--- ==================================================
--- SELECT TAB BY NAME
--- ==================================================
 function TabsManager:SelectTabByName(Name)
     local Tab, Page = self:GetTab(Name)
     if Tab and Page then
         self:SelectTab(Tab, Page)
     end
 end
+_G.JAYJAY_TabsManager = TabsManager
 
--- ==================================================
--- EXPORT
--- ==================================================
-_G.YOKUDO_TabsManager = TabsManager
-
-print("✅ Tabs Manager Loaded")
+print(" Tabs Manager Loaded")

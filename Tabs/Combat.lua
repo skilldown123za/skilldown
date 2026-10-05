@@ -1,19 +1,8 @@
--- ==================================================
--- YOKUDO HUB | TAB | Combat
--- ==================================================
-
-local TabsManager = _G.YOKUDO_TabsManager
+﻿
+local TabsManager = _G.JAYJAY_TabsManager
 
 local CombatTab, CombatPage = TabsManager:RegisterTab("Combat", 3, "COMBAT")
-
--- ==================================================
--- CONTENT
--- ==================================================
 CreateSectionTitle(CombatPage, "Combat", 1)
-
--- ==================================================
--- FEATURE 1: AUTO EQUIP BAT (CHECKBOX)
--- ==================================================
 local AutoEquipHolder = Instance.new("Frame")
 AutoEquipHolder.Size = UDim2.new(1, 0, 0, 32)
 AutoEquipHolder.BackgroundTransparency = 1
@@ -52,7 +41,7 @@ AutoEquipStroke.Parent = AutoEquipCheckButton
 local AutoEquipCheck = Instance.new("TextLabel")
 AutoEquipCheck.Size = UDim2.new(1, 0, 1, 0)
 AutoEquipCheck.BackgroundTransparency = 1
-AutoEquipCheck.Text = "✓"
+AutoEquipCheck.Text = ""
 AutoEquipCheck.TextColor3 = Color3.fromRGB(255, 255, 255)
 AutoEquipCheck.TextSize = 18
 AutoEquipCheck.Font = Enum.Font.GothamBold
@@ -64,14 +53,14 @@ local function ToggleAutoEquip()
     if AutoEquipCheck.Visible then
         AutoEquipCheckButton.BackgroundColor3 = Color3.fromRGB(105, 90, 190)
         AutoEquipStroke.Color = Color3.fromRGB(135, 120, 225)
-        if _G.YOKUDO_AutoAttack then
-            _G.YOKUDO_AutoAttack.EnableAutoEquip()
+        if _G.JAYJAY_AutoAttack then
+            _G.JAYJAY_AutoAttack.EnableAutoEquip()
         end
     else
         AutoEquipCheckButton.BackgroundColor3 = Color3.fromRGB(28, 29, 39)
         AutoEquipStroke.Color = Color3.fromRGB(200, 200, 220)
-        if _G.YOKUDO_AutoAttack then
-            _G.YOKUDO_AutoAttack.DisableAutoEquip()
+        if _G.JAYJAY_AutoAttack then
+            _G.JAYJAY_AutoAttack.DisableAutoEquip()
         end
     end
 end
@@ -79,10 +68,6 @@ end
 AutoEquipCheckButton.MouseButton1Click:Connect(function()
     ToggleAutoEquip()
 end)
-
--- ==================================================
--- FEATURE 2: AUTO HIT PLAYER (CHECKBOX)
--- ==================================================
 local AutoHitHolder = Instance.new("Frame")
 AutoHitHolder.Size = UDim2.new(1, 0, 0, 52)
 AutoHitHolder.BackgroundTransparency = 1
@@ -133,7 +118,7 @@ AutoHitStroke.Parent = AutoHitCheckButton
 local AutoHitCheck = Instance.new("TextLabel")
 AutoHitCheck.Size = UDim2.new(1, 0, 1, 0)
 AutoHitCheck.BackgroundTransparency = 1
-AutoHitCheck.Text = "✓"
+AutoHitCheck.Text = ""
 AutoHitCheck.TextColor3 = Color3.fromRGB(255, 255, 255)
 AutoHitCheck.TextSize = 18
 AutoHitCheck.Font = Enum.Font.GothamBold
@@ -145,14 +130,14 @@ local function ToggleAutoHit()
     if AutoHitCheck.Visible then
         AutoHitCheckButton.BackgroundColor3 = Color3.fromRGB(105, 90, 190)
         AutoHitStroke.Color = Color3.fromRGB(135, 120, 225)
-        if _G.YOKUDO_AutoAttack then
-            _G.YOKUDO_AutoAttack.EnableAutoHit()
+        if _G.JAYJAY_AutoAttack then
+            _G.JAYJAY_AutoAttack.EnableAutoHit()
         end
     else
         AutoHitCheckButton.BackgroundColor3 = Color3.fromRGB(28, 29, 39)
         AutoHitStroke.Color = Color3.fromRGB(200, 200, 220)
-        if _G.YOKUDO_AutoAttack then
-            _G.YOKUDO_AutoAttack.DisableAutoHit()
+        if _G.JAYJAY_AutoAttack then
+            _G.JAYJAY_AutoAttack.DisableAutoHit()
         end
     end
 end
@@ -161,4 +146,4 @@ AutoHitCheckButton.MouseButton1Click:Connect(function()
     ToggleAutoHit()
 end)
 
-print("✅ Combat Tab Loaded")
+print(" Combat Tab Loaded")

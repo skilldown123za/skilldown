@@ -1,27 +1,9 @@
---==================================================
--- YOKUDO HUB | TAB | Setting (UPDATED v3)
--- ✅ Anti Trap
--- ✅ God Mode
--- ✅ Manual Fast Click
--- ✅ Anti AFK
--- ❌ គ្មាន Safe Speed Mode (REMOVED)
--- ❌ គ្មាន Method/Speed TextBox/AntiRagdoll
--- ❌ គ្មាន Walk Speed
---==================================================
-
-local TabsManager = _G.YOKUDO_TabsManager
+﻿
+local TabsManager = _G.JAYJAY_TabsManager
 local TweenService = game:GetService("TweenService")
 
 local SettingTab, SettingPage = TabsManager:RegisterTab("Setting", 7, "SETTING")
-
---==================================================
--- SETTING CONTENT
---==================================================
 CreateSectionTitle(SettingPage, "Settings", 1)
-
---==================================================
--- FEATURE 1: ANTI TRAP
---==================================================
 local AntiTrapHolder = Instance.new("Frame")
 AntiTrapHolder.Size = UDim2.new(1, 0, 0, 52)
 AntiTrapHolder.BackgroundTransparency = 1
@@ -72,7 +54,7 @@ AntiTrapStroke.Parent = AntiTrapCheckButton
 local AntiTrapCheck = Instance.new("TextLabel")
 AntiTrapCheck.Size = UDim2.new(1, 0, 1, 0)
 AntiTrapCheck.BackgroundTransparency = 1
-AntiTrapCheck.Text = "✓"
+AntiTrapCheck.Text = ""
 AntiTrapCheck.TextColor3 = Color3.fromRGB(255, 255, 255)
 AntiTrapCheck.TextSize = 18
 AntiTrapCheck.Font = Enum.Font.GothamBold
@@ -87,14 +69,14 @@ local function ToggleAntiTrap()
     if AntiTrapEnabled then
         AntiTrapCheckButton.BackgroundColor3 = Color3.fromRGB(105, 90, 190)
         AntiTrapStroke.Color = Color3.fromRGB(135, 120, 225)
-        if _G.YOKUDO_AntiTrap then
-            _G.YOKUDO_AntiTrap.Enable()
+        if _G.JAYJAY_AntiTrap then
+            _G.JAYJAY_AntiTrap.Enable()
         end
     else
         AntiTrapCheckButton.BackgroundColor3 = Color3.fromRGB(28, 29, 39)
         AntiTrapStroke.Color = Color3.fromRGB(200, 200, 220)
-        if _G.YOKUDO_AntiTrap then
-            _G.YOKUDO_AntiTrap.Disable()
+        if _G.JAYJAY_AntiTrap then
+            _G.JAYJAY_AntiTrap.Disable()
         end
     end
 end
@@ -102,10 +84,6 @@ end
 AntiTrapCheckButton.MouseButton1Click:Connect(function()
     ToggleAntiTrap()
 end)
-
---==================================================
--- FEATURE 2: GOD MODE
---==================================================
 local GodModeHolder = Instance.new("Frame")
 GodModeHolder.Size = UDim2.new(1, 0, 0, 52)
 GodModeHolder.BackgroundTransparency = 1
@@ -168,15 +146,11 @@ GodModeButton.MouseLeave:Connect(function()
         BackgroundColor3 = Color3.fromRGB(105, 90, 190)
     }):Play()
 end)
-
---==================================================
--- NOTIFICATION FUNCTION
---==================================================
 local function ShowNotification(Text)
     local PlayerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 
     local NotifyGui = Instance.new("ScreenGui")
-    NotifyGui.Name = "YokudoNotify"
+    NotifyGui.Name = "JayjayNotify"
     NotifyGui.ResetOnSpawn = false
     NotifyGui.DisplayOrder = 999
     NotifyGui.Parent = PlayerGui
@@ -247,15 +221,11 @@ GodModeButton.MouseButton1Up:Connect(function()
 end)
 
 GodModeButton.MouseButton1Click:Connect(function()
-    if _G.YOKUDO_GodMode then
-        _G.YOKUDO_GodMode.Enable()
+    if _G.JAYJAY_GodMode then
+        _G.JAYJAY_GodMode.Enable()
     end
     ShowNotification("God Mode Start")
 end)
-
---==================================================
--- FEATURE 3: MANUAL FAST CLICK
---==================================================
 local FastClickHolder = Instance.new("Frame")
 FastClickHolder.Size = UDim2.new(1, 0, 0, 52)
 FastClickHolder.BackgroundTransparency = 1
@@ -334,35 +304,31 @@ FastClickButton.MouseButton1Up:Connect(function()
 end)
 
 FastClickButton.MouseButton1Click:Connect(function()
-    if not _G.YOKUDO_ManualFastClick then
-        warn("[YOKUDO] ManualFastClick feature not loaded")
+    if not _G.JAYJAY_ManualFastClick then
+        warn("[JAYJAY] ManualFastClick feature not loaded")
         ShowNotification("Manual Fast Click Not Loaded")
         return
     end
 
-    if _G.YOKUDO_ManualFastClick.IsEnabled() then
-        _G.YOKUDO_ManualFastClick.Disable()
+    if _G.JAYJAY_ManualFastClick.IsEnabled() then
+        _G.JAYJAY_ManualFastClick.Disable()
         ShowNotification("Manual Fast Click Stop")
     else
-        _G.YOKUDO_ManualFastClick.Enable()
+        _G.JAYJAY_ManualFastClick.Enable()
         ShowNotification("Manual Fast Click Start")
     end
 end)
 
 task.spawn(function()
     task.wait(0.5)
-    if _G.YOKUDO_ManualFastClick then
-        if _G.YOKUDO_ManualFastClick.IsEnabled() then
+    if _G.JAYJAY_ManualFastClick then
+        if _G.JAYJAY_ManualFastClick.IsEnabled() then
             FastClickButton.Text = "Stop"
         else
             FastClickButton.Text = "Click"
         end
     end
 end)
-
---==================================================
--- FEATURE 4: ANTI AFK
---==================================================
 local AntiAFKHolder = Instance.new("Frame")
 AntiAFKHolder.Size = UDim2.new(1, 0, 0, 52)
 AntiAFKHolder.BackgroundTransparency = 1
@@ -413,7 +379,7 @@ AntiAFKStroke.Parent = AntiAFKCheckButton
 local AntiAFKCheck = Instance.new("TextLabel")
 AntiAFKCheck.Size = UDim2.new(1, 0, 1, 0)
 AntiAFKCheck.BackgroundTransparency = 1
-AntiAFKCheck.Text = "✓"
+AntiAFKCheck.Text = ""
 AntiAFKCheck.TextColor3 = Color3.fromRGB(255, 255, 255)
 AntiAFKCheck.TextSize = 18
 AntiAFKCheck.Font = Enum.Font.GothamBold
@@ -428,14 +394,14 @@ local function ToggleAntiAFK()
     if AntiAFKEnabled then
         AntiAFKCheckButton.BackgroundColor3 = Color3.fromRGB(105, 90, 190)
         AntiAFKStroke.Color = Color3.fromRGB(135, 120, 225)
-        if _G.YOKUDO_AntiAFK then
-            _G.YOKUDO_AntiAFK.Enable()
+        if _G.JAYJAY_AntiAFK then
+            _G.JAYJAY_AntiAFK.Enable()
         end
     else
         AntiAFKCheckButton.BackgroundColor3 = Color3.fromRGB(28, 29, 39)
         AntiAFKStroke.Color = Color3.fromRGB(200, 200, 220)
-        if _G.YOKUDO_AntiAFK then
-            _G.YOKUDO_AntiAFK.Disable()
+        if _G.JAYJAY_AntiAFK then
+            _G.JAYJAY_AntiAFK.Disable()
         end
     end
 end
@@ -443,15 +409,11 @@ end
 AntiAFKCheckButton.MouseButton1Click:Connect(function()
     ToggleAntiAFK()
 end)
-
---==================================================
--- SYNC ON LOAD
---==================================================
 task.spawn(function()
     task.wait(0.5)
 
-    if _G.YOKUDO_AntiAFK then
-        if _G.YOKUDO_AntiAFK.IsEnabled() then
+    if _G.JAYJAY_AntiAFK then
+        if _G.JAYJAY_AntiAFK.IsEnabled() then
             AntiAFKEnabled = true
             AntiAFKCheck.Visible = true
             AntiAFKCheckButton.BackgroundColor3 = Color3.fromRGB(105, 90, 190)
@@ -460,4 +422,4 @@ task.spawn(function()
     end
 end)
 
-print("✅ Setting Tab Loaded (v3 — No Safe Speed Mode)")
+print(" Setting Tab Loaded (v3  No Safe Speed Mode)")

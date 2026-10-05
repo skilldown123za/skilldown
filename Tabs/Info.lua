@@ -1,20 +1,9 @@
---==================================================
--- YOKUDO HUB | TAB | Info
---==================================================
-
-local TabsManager = _G.YOKUDO_TabsManager
+﻿
+local TabsManager = _G.JAYJAY_TabsManager
 local TweenService = game:GetService("TweenService")
 
 local InfoTab, InfoPage = TabsManager:RegisterTab("Info", 1, "INFO")
-
---==================================================
--- INFO CONTENT
---==================================================
-CreateSectionTitle(InfoPage, "YOKUDO HUB | Steal An Egg", 1)
-
---==================================================
--- TITLE: Join Group For Notification Update Script
---==================================================
+CreateSectionTitle(InfoPage, "JAYJAY HUB | Steal An Egg", 1)
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(1, 0, 0, 26)
 TitleLabel.BackgroundTransparency = 1
@@ -25,10 +14,6 @@ TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.LayoutOrder = 2
 TitleLabel.Parent = InfoPage
-
---==================================================
--- GROUP DISCORD
---==================================================
 local GroupLabel = Instance.new("TextLabel")
 GroupLabel.Size = UDim2.new(1, 0, 0, 24)
 GroupLabel.BackgroundTransparency = 1
@@ -39,10 +24,6 @@ GroupLabel.TextXAlignment = Enum.TextXAlignment.Left
 GroupLabel.Font = Enum.Font.GothamMedium
 GroupLabel.LayoutOrder = 3
 GroupLabel.Parent = InfoPage
-
---==================================================
--- LINK (Clickable Copy)
---==================================================
 local LinkBtn = Instance.new("TextButton")
 LinkBtn.Size = UDim2.new(1, 0, 0, 30)
 LinkBtn.BackgroundColor3 = Color3.fromRGB(28, 29, 42)
@@ -70,10 +51,6 @@ local LinkPadding = Instance.new("UIPadding")
 LinkPadding.PaddingLeft = UDim.new(0, 10)
 LinkPadding.PaddingRight = UDim.new(0, 10)
 LinkPadding.Parent = LinkBtn
-
---==================================================
--- COPY BUTTON
---==================================================
 local CopyBtn = Instance.new("TextButton")
 CopyBtn.Size = UDim2.new(0, 120, 0, 32)
 CopyBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
@@ -95,10 +72,6 @@ CopyStroke.Color = Color3.fromRGB(120, 130, 255)
 CopyStroke.Thickness = 1.5
 CopyStroke.Transparency = 0.3
 CopyStroke.Parent = CopyBtn
-
--- ==================================================
--- COPY FUNCTION
--- ==================================================
 local DISCORD_LINK = "https://discord.gg/aKeK6avatS"
 
 local function CopyDiscord()
@@ -115,7 +88,7 @@ local function CopyDiscord()
             CopyBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
         end)
 
-        print("[YOKUDO] Discord Link Copied: " .. DISCORD_LINK)
+        print("[JAYJAY] Discord Link Copied: " .. DISCORD_LINK)
     else
         CopyBtn.Text = "FAILED!"
         CopyBtn.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
@@ -125,13 +98,9 @@ local function CopyDiscord()
             CopyBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
         end)
 
-        warn("[YOKUDO] Failed to copy Discord link")
+        warn("[JAYJAY] Failed to copy Discord link")
     end
 end
-
--- ==================================================
--- BUTTON EVENTS
--- ==================================================
 CopyBtn.MouseButton1Click:Connect(CopyDiscord)
 LinkBtn.MouseButton1Click:Connect(CopyDiscord)
 
@@ -163,4 +132,4 @@ LinkBtn.MouseLeave:Connect(function()
     }):Play()
 end)
 
-print("✅ Info Tab Loaded")
+print(" Info Tab Loaded")

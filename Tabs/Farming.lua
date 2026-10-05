@@ -1,22 +1,10 @@
--- ==================================================
--- YOKUDO HUB | TAB | Farming (v4 FINAL)
--- ✅ Rarity Dropdown (9 Rarities)
--- ✅ Auto AFK Farming Egg
--- ✅ SpeedLock Integration
--- ✅ Export _G.YOKUDO_FarmButton
--- ✅ គ្មាន Audio
--- ==================================================
-
-local TabsManager = _G.YOKUDO_TabsManager
+﻿
+local TabsManager = _G.JAYJAY_TabsManager
 local TweenService = game:GetService("TweenService")
 
 local FarmingTab, FarmingPage = TabsManager:RegisterTab("Farming", 2, "FARMING")
 
 CreateSectionTitle(FarmingPage, "Farming", 1)
-
--- ==================================================
--- RARITY COLORS
--- ==================================================
 local RarityColors = {
     Divine = Color3.fromRGB(255, 215, 0),
     Eternal = Color3.fromRGB(0, 255, 255),
@@ -33,10 +21,6 @@ local RarityOrder = {
     "Divine", "Eternal", "Secret", "Mythic", "Legendary",
     "Epic", "Rare", "Uncommon", "Common"
 }
-
--- ==================================================
--- DROPDOWN
--- ==================================================
 local RarityHolder = Instance.new("Frame")
 RarityHolder.Size = UDim2.new(1, 0, 0, 52)
 RarityHolder.BackgroundTransparency = 1
@@ -92,7 +76,7 @@ DropdownBtn.Size = UDim2.new(0, 120, 0, 28)
 DropdownBtn.Position = UDim2.new(1, -120, 0.5, -14)
 DropdownBtn.BackgroundColor3 = Color3.fromRGB(30, 31, 45)
 DropdownBtn.BorderSizePixel = 0
-DropdownBtn.Text = GetSelectedText() .. " ▼"
+DropdownBtn.Text = GetSelectedText() .. " "
 DropdownBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 DropdownBtn.TextSize = 11
 DropdownBtn.Font = Enum.Font.GothamBold
@@ -152,7 +136,7 @@ local function UpdateOptionVisual(Name)
 
     if SelectedRarities[Name] then
         Option.BackgroundColor3 = RarityColors[Name] or Color3.fromRGB(105, 90, 190)
-        Option.Text = "✓ " .. Name
+        Option.Text = " " .. Name
         if Name == "Divine" or Name == "Eternal" or Name == "Uncommon" or Name == "Common" then
             Option.TextColor3 = Color3.fromRGB(0, 0, 0)
         else
@@ -188,16 +172,16 @@ local function CreateDropdownOption(Name, Order)
     Option.MouseButton1Click:Connect(function()
         SelectedRarities[Name] = not SelectedRarities[Name]
         UpdateOptionVisual(Name)
-        DropdownBtn.Text = GetSelectedText() .. " ▼"
+        DropdownBtn.Text = GetSelectedText() .. " "
 
-        if _G.YOKUDO_FarmingManager then
+        if _G.JAYJAY_FarmingManager then
             local List = {}
             for _, rarity in ipairs(RarityOrder) do
                 if SelectedRarities[rarity] then
                     table.insert(List, rarity)
                 end
             end
-            _G.YOKUDO_FarmingManager.SetRarities(List)
+            _G.JAYJAY_FarmingManager.SetRarities(List)
         end
 
         print("[Farming] Rarity Toggled: " .. Name .. " = " .. tostring(SelectedRarities[Name]))
@@ -225,10 +209,6 @@ DropdownScroll.CanvasSize = UDim2.new(0, 0, 0, #RarityOrder * 24 + 8)
 DropdownBtn.MouseButton1Click:Connect(function()
     DropdownScroll.Visible = not DropdownScroll.Visible
 end)
-
--- ==================================================
--- AUTO AFK FARMING EGG
--- ==================================================
 local FarmHolder = Instance.new("Frame")
 FarmHolder.Size = UDim2.new(1, 0, 0, 52)
 FarmHolder.BackgroundTransparency = 1
@@ -279,29 +259,25 @@ FarmStroke.Parent = FarmButton
 local FarmCheck = Instance.new("TextLabel")
 FarmCheck.Size = UDim2.new(1, 0, 1, 0)
 FarmCheck.BackgroundTransparency = 1
-FarmCheck.Text = "✓"
+FarmCheck.Text = ""
 FarmCheck.TextColor3 = Color3.fromRGB(255, 255, 255)
 FarmCheck.TextSize = 18
 FarmCheck.Font = Enum.Font.GothamBold
 FarmCheck.Visible = false
 FarmCheck.Parent = FarmButton
-
--- ==================================================
--- TOGGLE FARM (SpeedLock Check)
--- ==================================================
 local FarmEnabled = false
 
 local function ToggleFarm()
-    if _G.YOKUDO_SpeedLock and not _G.YOKUDO_SpeedLock.IsUnlocked() then
-        _G.YOKUDO_SpeedLock.ShowMessage(
-            "🔒 To Get Speed 1B UP\nWhen 1B Done, Please Exit Game and Join Again",
+    if _G.JAYJAY_SpeedLock and not _G.JAYJAY_SpeedLock.IsUnlocked() then
+        _G.JAYJAY_SpeedLock.ShowMessage(
+            " To Get Speed 1B UP\nWhen 1B Done, Please Exit Game and Join Again",
             5
         )
         return
     end
     
-    if not _G.YOKUDO_FarmingManager then
-        warn("[YOKUDO] FarmingManager not loaded!")
+    if not _G.JAYJAY_FarmingManager then
+        warn("[JAYJAY] FarmingManager not loaded!")
         return
     end
 
@@ -318,26 +294,22 @@ local function ToggleFarm()
                 table.insert(List, rarity)
             end
         end
-        _G.YOKUDO_FarmingManager.SetRarities(List)
-        _G.YOKUDO_FarmingManager.Enable()
+        _G.JAYJAY_FarmingManager.SetRarities(List)
+        _G.JAYJAY_FarmingManager.Enable()
     else
         FarmButton.BackgroundColor3 = Color3.fromRGB(28, 29, 39)
         FarmStroke.Color = Color3.fromRGB(200, 200, 220)
-        _G.YOKUDO_FarmingManager.Disable()
+        _G.JAYJAY_FarmingManager.Disable()
     end
 end
 
 FarmButton.MouseButton1Click:Connect(function()
     ToggleFarm()
 end)
-
--- ==================================================
--- SYNC ON LOAD
--- ==================================================
 task.spawn(function()
     task.wait(1)
-    if _G.YOKUDO_FarmingManager then
-        local State = _G.YOKUDO_FarmingManager.IsEnabled()
+    if _G.JAYJAY_FarmingManager then
+        local State = _G.JAYJAY_FarmingManager.IsEnabled()
         FarmEnabled = State
         FarmCheck.Visible = State
         if State then
@@ -346,14 +318,10 @@ task.spawn(function()
         end
     end
 end)
-
--- ==================================================
--- PERIODIC SYNC (រាល់ 1s)
--- ==================================================
 task.spawn(function()
     while task.wait(1) do
-        if _G.YOKUDO_FarmingManager then
-            local CurrentState = _G.YOKUDO_FarmingManager.IsEnabled()
+        if _G.JAYJAY_FarmingManager then
+            local CurrentState = _G.JAYJAY_FarmingManager.IsEnabled()
             local UIState = FarmCheck.Visible
 
             if CurrentState ~= UIState then
@@ -371,13 +339,9 @@ task.spawn(function()
         end
     end
 end)
-
--- ==================================================
--- REFRESH FUNCTION
--- ==================================================
-_G.YOKUDO_RefreshFarmingUI = function()
-    if _G.YOKUDO_FarmingManager then
-        local State = _G.YOKUDO_FarmingManager.IsEnabled()
+_G.JAYJAY_RefreshFarmingUI = function()
+    if _G.JAYJAY_FarmingManager then
+        local State = _G.JAYJAY_FarmingManager.IsEnabled()
         FarmEnabled = State
         FarmCheck.Visible = State
 
@@ -390,10 +354,6 @@ _G.YOKUDO_RefreshFarmingUI = function()
         end
     end
 end
+_G.JAYJAY_FarmButton = FarmButton
 
--- ==================================================
--- EXPORT BUTTON
--- ==================================================
-_G.YOKUDO_FarmButton = FarmButton
-
-print("✅ Farming Tab Loaded (v4 FINAL)")
+print(" Farming Tab Loaded (v4 FINAL)")

@@ -1,22 +1,9 @@
--- ==================================================
--- YOKUDO HUB | TAB | Collect Egg New (NO WARNING)
--- Feature 1: For Event Drop Egg
--- Feature 2: Anti Guard
--- ==================================================
-
-local TabsManager = _G.YOKUDO_TabsManager
+﻿
+local TabsManager = _G.JAYJAY_TabsManager
 local TweenService = game:GetService("TweenService")
 
 local CollectEggNewTab, CollectEggNewPage = TabsManager:RegisterTab("Collect Egg new", 8, "COLLECT_EGG_NEW")
-
--- ==================================================
--- CONTENT
--- ==================================================
 CreateSectionTitle(CollectEggNewPage, "Collect Egg new", 1)
-
--- ==================================================
--- FEATURE 1: For Event Drop Egg (Checkbox)
--- ==================================================
 local DropEggHolder = Instance.new("Frame")
 DropEggHolder.Size = UDim2.new(1, 0, 0, 52)
 DropEggHolder.BackgroundTransparency = 1
@@ -67,16 +54,12 @@ DropEggStroke.Parent = DropEggButton
 local DropEggCheck = Instance.new("TextLabel")
 DropEggCheck.Size = UDim2.new(1, 0, 1, 0)
 DropEggCheck.BackgroundTransparency = 1
-DropEggCheck.Text = "✓"
+DropEggCheck.Text = ""
 DropEggCheck.TextColor3 = Color3.fromRGB(255, 255, 255)
 DropEggCheck.TextSize = 18
 DropEggCheck.Font = Enum.Font.GothamBold
 DropEggCheck.Visible = false
 DropEggCheck.Parent = DropEggButton
-
--- ==================================================
--- FEATURE 2: Anti Guard (Checkbox)
--- ==================================================
 local AntiGuardHolder = Instance.new("Frame")
 AntiGuardHolder.Size = UDim2.new(1, 0, 0, 52)
 AntiGuardHolder.BackgroundTransparency = 1
@@ -127,22 +110,14 @@ AntiGuardStroke.Parent = AntiGuardButton
 local AntiGuardCheck = Instance.new("TextLabel")
 AntiGuardCheck.Size = UDim2.new(1, 0, 1, 0)
 AntiGuardCheck.BackgroundTransparency = 1
-AntiGuardCheck.Text = "✓"
+AntiGuardCheck.Text = ""
 AntiGuardCheck.TextColor3 = Color3.fromRGB(255, 255, 255)
 AntiGuardCheck.TextSize = 18
 AntiGuardCheck.Font = Enum.Font.GothamBold
 AntiGuardCheck.Visible = false
 AntiGuardCheck.Parent = AntiGuardButton
-
--- ==================================================
--- STATE
--- ==================================================
 local DropEggEnabled = false
 local AntiGuardEnabled = false
-
--- ==================================================
--- TOGGLE DROP EGG
--- ==================================================
 local function ToggleDropEgg()
     DropEggEnabled = not DropEggEnabled
     DropEggCheck.Visible = DropEggEnabled
@@ -151,8 +126,8 @@ local function ToggleDropEgg()
         DropEggButton.BackgroundColor3 = Color3.fromRGB(105, 90, 190)
         DropEggStroke.Color = Color3.fromRGB(135, 120, 225)
 
-        if _G.YOKUDO_DropEgg then
-            _G.YOKUDO_DropEgg.Enable()
+        if _G.JAYJAY_DropEgg then
+            _G.JAYJAY_DropEgg.Enable()
         else
             print("[Collect Egg new] DropEgg Feature not loaded")
         end
@@ -160,23 +135,19 @@ local function ToggleDropEgg()
         DropEggButton.BackgroundColor3 = Color3.fromRGB(28, 29, 39)
         DropEggStroke.Color = Color3.fromRGB(200, 200, 220)
 
-        if _G.YOKUDO_DropEgg then
-            _G.YOKUDO_DropEgg.Disable()
+        if _G.JAYJAY_DropEgg then
+            _G.JAYJAY_DropEgg.Disable()
         end
     end
 
-    if _G.YOKUDO_ConfigSystem then
-        _G.YOKUDO_ConfigSystem.Save()
+    if _G.JAYJAY_ConfigSystem then
+        _G.JAYJAY_ConfigSystem.Save()
     end
 end
 
 DropEggButton.MouseButton1Click:Connect(function()
     ToggleDropEgg()
 end)
-
--- ==================================================
--- TOGGLE ANTI GUARD
--- ==================================================
 local function ToggleAntiGuard()
     AntiGuardEnabled = not AntiGuardEnabled
     AntiGuardCheck.Visible = AntiGuardEnabled
@@ -185,8 +156,8 @@ local function ToggleAntiGuard()
         AntiGuardButton.BackgroundColor3 = Color3.fromRGB(105, 90, 190)
         AntiGuardStroke.Color = Color3.fromRGB(135, 120, 225)
 
-        if _G.YOKUDO_AntiGuard then
-            _G.YOKUDO_AntiGuard.Enable()
+        if _G.JAYJAY_AntiGuard then
+            _G.JAYJAY_AntiGuard.Enable()
         else
             print("[Collect Egg new] AntiGuard Feature not loaded")
         end
@@ -194,27 +165,23 @@ local function ToggleAntiGuard()
         AntiGuardButton.BackgroundColor3 = Color3.fromRGB(28, 29, 39)
         AntiGuardStroke.Color = Color3.fromRGB(200, 200, 220)
 
-        if _G.YOKUDO_AntiGuard then
-            _G.YOKUDO_AntiGuard.Disable()
+        if _G.JAYJAY_AntiGuard then
+            _G.JAYJAY_AntiGuard.Disable()
         end
     end
 
-    if _G.YOKUDO_ConfigSystem then
-        _G.YOKUDO_ConfigSystem.Save()
+    if _G.JAYJAY_ConfigSystem then
+        _G.JAYJAY_ConfigSystem.Save()
     end
 end
 
 AntiGuardButton.MouseButton1Click:Connect(function()
     ToggleAntiGuard()
 end)
-
--- ==================================================
--- SYNC ON LOAD
--- ==================================================
 task.spawn(function()
     task.wait(1)
-    if _G.YOKUDO_DropEgg then
-        local State = _G.YOKUDO_DropEgg.IsEnabled()
+    if _G.JAYJAY_DropEgg then
+        local State = _G.JAYJAY_DropEgg.IsEnabled()
         DropEggEnabled = State
         DropEggCheck.Visible = State
         if State then
@@ -222,8 +189,8 @@ task.spawn(function()
             DropEggStroke.Color = Color3.fromRGB(135, 120, 225)
         end
     end
-    if _G.YOKUDO_AntiGuard then
-        local State = _G.YOKUDO_AntiGuard.IsEnabled()
+    if _G.JAYJAY_AntiGuard then
+        local State = _G.JAYJAY_AntiGuard.IsEnabled()
         AntiGuardEnabled = State
         AntiGuardCheck.Visible = State
         if State then
@@ -232,13 +199,9 @@ task.spawn(function()
         end
     end
 end)
-
--- ==================================================
--- REFRESH FUNCTION (សម្រាប់ ConfigSystem)
--- ==================================================
-_G.YOKUDO_RefreshCollectEggNewUI = function()
-    if _G.YOKUDO_DropEgg then
-        local State = _G.YOKUDO_DropEgg.IsEnabled()
+_G.JAYJAY_RefreshCollectEggNewUI = function()
+    if _G.JAYJAY_DropEgg then
+        local State = _G.JAYJAY_DropEgg.IsEnabled()
         DropEggEnabled = State
         DropEggCheck.Visible = State
         if State then
@@ -249,8 +212,8 @@ _G.YOKUDO_RefreshCollectEggNewUI = function()
             DropEggStroke.Color = Color3.fromRGB(200, 200, 220)
         end
     end
-    if _G.YOKUDO_AntiGuard then
-        local State = _G.YOKUDO_AntiGuard.IsEnabled()
+    if _G.JAYJAY_AntiGuard then
+        local State = _G.JAYJAY_AntiGuard.IsEnabled()
         AntiGuardEnabled = State
         AntiGuardCheck.Visible = State
         if State then
@@ -261,7 +224,7 @@ _G.YOKUDO_RefreshCollectEggNewUI = function()
             AntiGuardStroke.Color = Color3.fromRGB(200, 200, 220)
         end
     end
-    print("[YOKUDO] Collect Egg new Tab UI Refreshed")
+    print("[JAYJAY] Collect Egg new Tab UI Refreshed")
 end
 
-print("✅ Collect Egg new Tab Loaded (No Warning)")
+print(" Collect Egg new Tab Loaded (No Warning)")

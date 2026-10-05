@@ -1,11 +1,7 @@
-local TabsManager = _G.YOKUDO_TabsManager
+﻿local TabsManager = _G.JAYJAY_TabsManager
 local TweenService = game:GetService("TweenService")
 
 local MapSettingsTab, MapSettingsPage = TabsManager:RegisterTab("Map Settings", 10, "MAP_SETTINGS")
-
--- ==================================================
--- ✅ MAP DATA (All In One)
--- ==================================================
 local MapData = {
     [1] = {MapId = 1, Name = "Angels & Demons", DefaultWait = 8, Pos = Vector3.new(5666, 70, -329)},
     [2] = {MapId = 2, Name = "Titan Temple", DefaultWait = 8, Pos = Vector3.new(4798, 70, -333)},
@@ -19,15 +15,7 @@ local MapData = {
     [10] = {MapId = 10, Name = "Desert", DefaultWait = 1, Pos = Vector3.new(950, 70, -328)},
     [11] = {MapId = 11, Name = "Enchanted Forest", DefaultWait = 11, Pos = Vector3.new(6703, 70, -349)},
 }
-
--- ==================================================
--- ✅ CUSTOM VALUES (User Input)
--- ==================================================
 local CustomValues = {}
-
--- ==================================================
--- ✅ FUNCTIONS
--- ==================================================
 local function GetMapWait(MapId)
     if CustomValues[MapId] then
         return CustomValues[MapId]
@@ -43,13 +31,13 @@ local function SetMapWait(MapId, Value)
         return false
     end
     CustomValues[MapId] = Value
-    print(string.format("[MapSettings] ✅ Map %d Wait = %d", MapId, Value))
+    print(string.format("[MapSettings]  Map %d Wait = %d", MapId, Value))
     return true
 end
 
 local function ResetMapWait(MapId)
     CustomValues[MapId] = nil
-    print(string.format("[MapSettings] 🔄 Map %d Reset", MapId))
+    print(string.format("[MapSettings]  Map %d Reset", MapId))
 end
 
 local function GetMapData(MapId)
@@ -59,11 +47,7 @@ end
 local function GetAllMaps()
     return MapData
 end
-
--- ==================================================
--- ✅ EXPORT (មុន UI — ដើម្បី TeleportSystem អានបាន)
--- ==================================================
-_G.YOKUDO_MapSettings = {
+_G.JAYJAY_MapSettings = {
     Data = MapData,
     CustomValues = CustomValues,
     GetMapWait = GetMapWait,
@@ -73,16 +57,8 @@ _G.YOKUDO_MapSettings = {
     GetAllMaps = GetAllMaps,
 }
 
-print("✅ MapSettings Data + Functions Loaded")
-
--- ==================================================
--- ✅ UI
--- ==================================================
+print(" MapSettings Data + Functions Loaded")
 CreateSectionTitle(MapSettingsPage, "Map Settings", 1)
-
--- ==================================================
--- CREATE MAP ENTRY
--- ==================================================
 local CreatedEntries = {}
 
 local function CreateMapEntry(MapId, MapInfo)
@@ -103,8 +79,6 @@ local function CreateMapEntry(MapId, MapInfo)
     EntryStroke.Thickness = 1.5
     EntryStroke.Transparency = 0.4
     EntryStroke.Parent = Entry
-
-    -- Map ID Badge
     local IdBadge = Instance.new("Frame")
     IdBadge.Size = UDim2.new(0, 32, 0, 32)
     IdBadge.Position = UDim2.new(0, 8, 0.5, -16)
@@ -124,8 +98,6 @@ local function CreateMapEntry(MapId, MapInfo)
     IdLabel.TextSize = 14
     IdLabel.Font = Enum.Font.GothamBold
     IdLabel.Parent = IdBadge
-
-    -- Map Name
     local NameLabel = Instance.new("TextLabel")
     NameLabel.Size = UDim2.new(1, -170, 0, 18)
     NameLabel.Position = UDim2.new(0, 48, 0, 8)
@@ -136,8 +108,6 @@ local function CreateMapEntry(MapId, MapInfo)
     NameLabel.TextXAlignment = Enum.TextXAlignment.Left
     NameLabel.Font = Enum.Font.GothamBold
     NameLabel.Parent = Entry
-
-    -- Default Sub
     local DefaultSub = Instance.new("TextLabel")
     DefaultSub.Size = UDim2.new(1, -170, 0, 14)
     DefaultSub.Position = UDim2.new(0, 48, 0, 28)
@@ -148,8 +118,6 @@ local function CreateMapEntry(MapId, MapInfo)
     DefaultSub.TextXAlignment = Enum.TextXAlignment.Left
     DefaultSub.Font = Enum.Font.Gotham
     DefaultSub.Parent = Entry
-
-    -- TextBox
     local TextBox = Instance.new("TextBox")
     TextBox.Name = "ValueBox"
     TextBox.Size = UDim2.new(0, 80, 0, 32)
@@ -175,8 +143,6 @@ local function CreateMapEntry(MapId, MapInfo)
     TextBoxStroke.Thickness = 1.5
     TextBoxStroke.Transparency = 0.3
     TextBoxStroke.Parent = TextBox
-
-    -- Focus Visual
     TextBox.Focused:Connect(function()
         TweenService:Create(TextBoxStroke, TweenInfo.new(0.15), {
             Color = Color3.fromRGB(135, 120, 225),
@@ -195,8 +161,6 @@ local function CreateMapEntry(MapId, MapInfo)
         if NewValue and NewValue >= 0 then
             SetMapWait(MapId, NewValue)
             TextBox.Text = tostring(NewValue)
-
-            -- Green Flash
             TweenService:Create(TextBoxStroke, TweenInfo.new(0.2), {
                 Color = Color3.fromRGB(80, 255, 80)
             }):Play()
@@ -206,8 +170,6 @@ local function CreateMapEntry(MapId, MapInfo)
             }):Play()
         else
             TextBox.Text = tostring(GetMapWait(MapId))
-
-            -- Red Flash
             TweenService:Create(TextBoxStroke, TweenInfo.new(0.2), {
                 Color = Color3.fromRGB(255, 80, 80)
             }):Play()
@@ -226,10 +188,6 @@ local function CreateMapEntry(MapId, MapInfo)
 
     return Entry
 end
-
--- ==================================================
--- ✅ CREATE ALL MAP ENTRIES (Sort Map ID)
--- ==================================================
 local MapIds = {}
 for MapId, _ in pairs(MapData) do
     table.insert(MapIds, MapId)
@@ -242,10 +200,6 @@ for _, MapId in ipairs(MapIds) do
         CreateMapEntry(MapId, MapInfo)
     end
 end
-
--- ==================================================
--- RESET BUTTON
--- ==================================================
 local ResetBtn = Instance.new("TextButton")
 ResetBtn.Size = UDim2.new(1, 0, 0, 36)
 ResetBtn.BackgroundColor3 = Color3.fromRGB(105, 90, 190)
@@ -288,9 +242,7 @@ ResetBtn.MouseButton1Click:Connect(function()
             data.TextBox.Text = tostring(MapData[data.MapId].DefaultWait)
         end
     end
-    print("[MapSettings] 🔄 All Maps Reset")
-
-    -- Green Flash
+    print("[MapSettings]  All Maps Reset")
     TweenService:Create(ResetStroke, TweenInfo.new(0.2), {
         Color = Color3.fromRGB(80, 255, 80)
     }):Play()
@@ -299,17 +251,13 @@ ResetBtn.MouseButton1Click:Connect(function()
         Color = Color3.fromRGB(135, 120, 225)
     }):Play()
 end)
-
--- ==================================================
--- ✅ REFRESH FUNCTION
--- ==================================================
-_G.YOKUDO_RefreshMapSettingsUI = function()
+_G.JAYJAY_RefreshMapSettingsUI = function()
     for _, data in ipairs(CreatedEntries) do
         if data.TextBox then
             data.TextBox.Text = tostring(GetMapWait(data.MapId))
         end
     end
-    print("[MapSettings] 🔄 UI Refreshed")
+    print("[MapSettings]  UI Refreshed")
 end
 
-print("✅ Map Settings Tab Loaded (v5 FINAL — Map 11 Enabled)")
+print(" Map Settings Tab Loaded (v5 FINAL  Map 11 Enabled)")
