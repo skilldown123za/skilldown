@@ -7,7 +7,7 @@
 -- ✅ Register + RunCheck
 -- ==================================================
 
-local BASE_URL = "https://raw.githubusercontent.com/bromboxi/barsuno/main/"
+local BASE_URL = "https://raw.githubusercontent.com/skilldown123za/skilldown/main/"
 
 _G.YOKUDO_EnablePrint = false
 
@@ -18,7 +18,7 @@ print = function(...)
     end
 end
 
-print("🔵 Loading YOKUDO HUB...")
+print("🔵 Loading Jayjay Hub")
 
 -- ==================================================
 -- CACHE SYSTEM
@@ -333,7 +333,7 @@ Loading.Update(100)
 task.wait(0.3)
 Loading.Destroy()
 print("✅ Loading Screen Closed!")
-print("🚀 YOKUDO HUB | Ready!")
+print("🚀 JAYJAY HUB | Ready!")
 print("🎯 Speed:", _G.YOKUDO_IsSpeedUnlocked and "✅ UNLOCKED" or "🔒 LOCKED")
 print("🗺️ MapSettings:", _G.YOKUDO_MapSettings and "✅ LOADED" or "❌ NOT LOADED")
 print("🔊 Sound:", _G.YOKUDO_Sound and "✅ LOADED" or "❌ NOT LOADED")
