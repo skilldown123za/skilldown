@@ -1,17 +1,16 @@
-﻿
 local BASE_URL = "https://raw.githubusercontent.com/skilldown123za/skilldown/main/"
 
 _G.JAYJAY_EnablePrint = false
 
 local oldPrint = print
-print = function(...)
+getgenv().print = function(...)
     if _G.JAYJAY_EnablePrint then
         oldPrint(...)
     end
 end
 
 print(" Loading JAYJAY HUB...")
-_G.JAYJAY_Cache = _G.JAYJAY_Cache or {}
+_G.JAYJAY_Cache = {}
 
 local function GetScript(path)
     local fullPath = BASE_URL .. path
@@ -21,6 +20,33 @@ local function GetScript(path)
     local script = game:HttpGet(fullPath)
     _G.JAYJAY_Cache[fullPath] = script
     return script
+end
+
+local function LoadScript(path)
+    local code = GetScript(path)
+    local func, err = loadstring(code)
+    
+    if not func then
+        warn("❌ JAYJAY HUB Error! Failed to load: " .. path)
+        warn("❌ Syntax Error: " .. tostring(err))
+        return
+    end
+    
+    -- Share executor's global environment so globals like CreateTab/CreatePage
+    -- are visible across all loadstring chunks
+    pcall(function()
+        if setfenv then
+            setfenv(func, getfenv(0))
+        end
+    end)
+    
+    local success, runErr = pcall(func)
+    if not success then
+        warn("❌ JAYJAY HUB Error! Failed to execute: " .. path)
+        warn("❌ Runtime Error: " .. tostring(runErr))
+    else
+        warn("✅ JAYJAY: Loaded " .. path)
+    end
 end
 repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer
 
@@ -43,15 +69,15 @@ end
 local Loading = CreateLoadingScreen()
 Loading.Update(5)
 Loading.Update(8)
-loadstring(GetScript("Config.lua"))()
+LoadScript("Config.lua")
 
 Loading.Update(10)
-loadstring(GetScript("UI.lua"))()
+LoadScript("UI.lua")
 
 Loading.Update(12)
-loadstring(GetScript("Components.lua"))()
+LoadScript("Components.lua")
 Loading.Update(15)
-loadstring(GetScript("Features/SpeedLock.lua"))()
+LoadScript("Features/SpeedLock.lua")
 Loading.Update(18)
 print(" Running Speed Check...")
 task.wait(1.5)
@@ -61,74 +87,74 @@ if _G.JAYJAY_SpeedLock then
     _G.JAYJAY_IsSpeedUnlocked = _G.JAYJAY_SpeedLock.IsUnlocked()
 end
 Loading.Update(25)
-loadstring(GetScript("Tabs/Init.lua"))()
+LoadScript("Tabs/Init.lua")
 Loading.Update(28)
-loadstring(GetScript("Features/AntiAFK.lua"))()
+LoadScript("Features/AntiAFK.lua")
 
 Loading.Update(30)
 
 Loading.Update(33)
-loadstring(GetScript("Features/AntiTrap.lua"))()
+LoadScript("Features/AntiTrap.lua")
 
 Loading.Update(36)
-loadstring(GetScript("Features/GodMode.lua"))()
+LoadScript("Features/GodMode.lua")
 Loading.Update(39)
-loadstring(GetScript("Features/TeleportSystem.lua"))()
+LoadScript("Features/TeleportSystem.lua")
 
 Loading.Update(42)
-loadstring(GetScript("Features/AutoFarm.lua"))()
+LoadScript("Features/AutoFarm.lua")
 
 Loading.Update(45)
-loadstring(GetScript("Features/AutoAttack.lua"))()
+LoadScript("Features/AutoAttack.lua")
 
 Loading.Update(48)
-loadstring(GetScript("Features/AFKSystem.lua"))()
+LoadScript("Features/AFKSystem.lua")
 Loading.Update(52)
-loadstring(GetScript("Features/FarmingManager.lua"))()
+LoadScript("Features/FarmingManager.lua")
 
 Loading.Update(56)
 
 Loading.Update(58)
 
 Loading.Update(60)
-loadstring(GetScript("Features/ManualFastClick.lua"))()
+LoadScript("Features/ManualFastClick.lua")
 
 Loading.Update(61)
-loadstring(GetScript("Features/DropEgg.lua"))()
+LoadScript("Features/DropEgg.lua")
 
 Loading.Update(62)
-loadstring(GetScript("Features/AntiGuard.lua"))()
+LoadScript("Features/AntiGuard.lua")
 
 Loading.Update(63)
-loadstring(GetScript("Features/ConfigSystem.lua"))()
+LoadScript("Features/ConfigSystem.lua")
 Loading.Update(65)
-loadstring(GetScript("Tabs/Info.lua"))()
+LoadScript("Tabs/Info.lua")
 
 Loading.Update(68)
-loadstring(GetScript("Tabs/Farming.lua"))()
+LoadScript("Tabs/Farming.lua")
 
 Loading.Update(70)
-loadstring(GetScript("Tabs/Combat.lua"))()
+LoadScript("Tabs/Combat.lua")
 
 Loading.Update(73)
-loadstring(GetScript("Tabs/AutoFarming.lua"))()
+LoadScript("Tabs/AutoFarming.lua")
 
 Loading.Update(76)
-loadstring(GetScript("Tabs/Event.lua"))()
+LoadScript("Tabs/Event.lua")
 
 Loading.Update(80)
-loadstring(GetScript("Tabs/HopServer.lua"))()
+LoadScript("Tabs/HopServer.lua")
 
 Loading.Update(85)
-loadstring(GetScript("Tabs/Setting.lua"))()
+LoadScript("Tabs/Setting.lua")
 
 Loading.Update(88)
-loadstring(GetScript("Tabs/CollectEggNew.lua"))()
+LoadScript("Tabs/CollectEggNew.lua")
 
 Loading.Update(90)
-loadstring(GetScript("Tabs/ESP.lua"))()
+LoadScript("Tabs/ESP.lua")
 Loading.Update(91)
-loadstring(GetScript("Tabs/MapSettings.lua"))()
+LoadScript("Tabs/MapSettings.lua")
 Loading.Update(92)
 task.spawn(function()
     task.wait(0.5)
@@ -162,7 +188,7 @@ end
 
 Loading.Update(95)
 Loading.Update(96)
-loadstring(GetScript("Features/BypassAntiCheat.lua"))()
+LoadScript("Features/BypassAntiCheat.lua")
 
 
 Loading.Update(100)
