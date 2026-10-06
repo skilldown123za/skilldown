@@ -1,6 +1,7 @@
 _G.JAYJAY = {
 	Name = "JAYJAY HUB | Steal An Egg",
-	AssetID = "rbxassetid://101352576986760",
+	--AssetID = "rbxassetid://101352576986760",
+	AssetID = "rbxassetid://107778070777162",
 	Author = "JAYJAY",
 	UI = {
 		Height = 340,
@@ -12,7 +13,10 @@ _G.JAYJAY = {
 			Background = Color3.fromRGB(16, 17, 23),
 			Sidebar = Color3.fromRGB(20, 21, 28),
 			SubText = Color3.fromRGB(145, 145, 165),
-			TopBar = Color3.fromRGB(23, 24, 32)
+			TopBar = Color3.fromRGB(23, 24, 32),
+			Hover = Color3.fromRGB(30, 31, 38),
+			Primary = Color3.fromRGB(25, 26, 33),
+			Border = Color3.fromRGB(40, 41, 48)
 		},
 		Width = 480
 	},
