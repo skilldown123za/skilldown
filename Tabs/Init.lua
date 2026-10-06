@@ -1,5 +1,12 @@
-﻿
 local TweenService = game:GetService("TweenService")
+
+-- Ensure access to Component functions across loadstring environments
+local CreateTab = CreateTab or _G.CreateTab
+local CreatePage = CreatePage or _G.CreatePage
+local CreateSectionTitle = CreateSectionTitle or _G.CreateSectionTitle
+local CreateCheckbox = CreateCheckbox or _G.CreateCheckbox
+local CreateTextBoxWithCheckbox = CreateTextBoxWithCheckbox or _G.CreateTextBoxWithCheckbox
+local CreateSmartCheckbox = CreateSmartCheckbox or _G.CreateSmartCheckbox
 
 local TabsManager = {}
 TabsManager.Tabs = {}
