@@ -488,4 +488,12 @@ function CreateSmartCheckbox(Parent, LabelText, Order, ToggleFunction, GetStateF
     }
 end
 
+-- Expose all component functions to _G for cross-loadstring access
+_G.CreateTab = CreateTab
+_G.CreatePage = CreatePage
+_G.CreateSectionTitle = CreateSectionTitle
+_G.CreateCheckbox = CreateCheckbox
+_G.CreateTextBoxWithCheckbox = CreateTextBoxWithCheckbox
+_G.CreateSmartCheckbox = CreateSmartCheckbox
+
 print(" Components Loaded (JAYJAY Premium Style)")
