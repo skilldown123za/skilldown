@@ -1,5 +1,11 @@
 local TweenService = game:GetService("TweenService")
 
+local CreateTab = _G.CreateTab
+local CreatePage = _G.CreatePage
+
+local TabsManager = {}
+TabsManager.Tabs = {}
+
 -- Ensure access to Component functions across loadstring environments
 local CreateTab = CreateTab or _G.CreateTab
 local CreatePage = CreatePage or _G.CreatePage
