@@ -488,12 +488,21 @@ function CreateSmartCheckbox(Parent, LabelText, Order, ToggleFunction, GetStateF
     }
 end
 
--- Expose all component functions to _G for cross-loadstring access
-_G.CreateTab = CreateTab
-_G.CreatePage = CreatePage
-_G.CreateSectionTitle = CreateSectionTitle
-_G.CreateCheckbox = CreateCheckbox
-_G.CreateTextBoxWithCheckbox = CreateTextBoxWithCheckbox
-_G.CreateSmartCheckbox = CreateSmartCheckbox
+-- Expose all component functions to _G and getgenv for cross-loadstring access
+local compFuncs = {
+    CreateTab = CreateTab,
+    CreatePage = CreatePage,
+    CreateSectionTitle = CreateSectionTitle,
+    CreateCheckbox = CreateCheckbox,
+    CreateTextBoxWithCheckbox = CreateTextBoxWithCheckbox,
+    CreateSmartCheckbox = CreateSmartCheckbox,
+}
+
+for name, fn in pairs(compFuncs) do
+    _G[name] = fn
+    if getgenv and type(getgenv) == "function" then
+        pcall(function() getgenv()[name] = fn end)
+    end
+end
 
 print(" Components Loaded (JAYJAY Premium Style)")
