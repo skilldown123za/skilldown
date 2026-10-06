@@ -1,10 +1,10 @@
-﻿
+
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Player = Players.LocalPlayer
-local Backpack = Player:WaitForChild("Backpack")
+local Backpack = Player:FindFirstChild("Backpack") or Player:WaitForChild("Backpack", 2)
 local function GetBatSwingRemote()
     local Success, Remote = pcall(function()
         return ReplicatedStorage.Packages.Networking["RE/BatSwing/Trigger"]

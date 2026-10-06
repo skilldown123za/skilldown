@@ -1,9 +1,9 @@
-﻿
+
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Player = Players.LocalPlayer
-local Container = workspace:WaitForChild("AreaEggSlotsClient")
+local Container = workspace:FindFirstChild("AreaEggSlotsClient") or workspace:WaitForChild("AreaEggSlotsClient", 1)
 local Cache = {
     MeshIdMap = {},
     MeshIdMapBuilt = false,
@@ -14,15 +14,16 @@ local Cache = {
 local AutoFarmEnabled = false
 local SelectedEgg = nil
 local EggList = {}
-local Assets = ReplicatedStorage:WaitForChild("Data"):WaitForChild("Assets")
-local Configs = Assets:WaitForChild("Configs")
-local EggModels = ReplicatedStorage:WaitForChild("Assets"):WaitForChild("Models"):WaitForChild("Eggs")
+local Assets = (ReplicatedStorage:FindFirstChild("Data") and ReplicatedStorage.Data:FindFirstChild("Assets")) or nil
+local Configs = Assets and Assets:FindFirstChild("Configs")
+local EggModels = (ReplicatedStorage:FindFirstChild("Assets") and ReplicatedStorage.Assets:FindFirstChild("Models") and ReplicatedStorage.Assets.Models:FindFirstChild("Eggs")) or nil
 local MutationsModule = nil
 pcall(function()
     MutationsModule = require(ReplicatedStorage.Shared.Modules.Mutations)
 end)
 local function BuildMeshIdMap()
     if Cache.MeshIdMapBuilt then return end
+    if not Configs or not EggModels then return end
 
     for _, Config in ipairs(Configs:GetChildren()) do
         local Success, Module = pcall(function()
@@ -48,7 +49,7 @@ local function BuildMeshIdMap()
     print("[AutoFarm] MeshId Map Built (Cache)")
 end
 
-BuildMeshIdMap()
+pcall(BuildMeshIdMap)
 local function GetPetData(AssetCategory)
     if not AssetCategory then return nil end
 
