@@ -14,16 +14,16 @@ Settings.UI = Settings.UI or {}
 Settings.UI.Theme = Settings.UI.Theme or {}
 local Theme = Settings.UI.Theme
 
--- Luxury Neo Purple-Pink (Light Theme)
-Theme.Background = Color3.fromRGB(248, 246, 252) -- Soft Neutral Background
-Theme.Sidebar = Color3.fromRGB(255, 255, 255) -- Pure White Sidebar
-Theme.TopBar = Color3.fromRGB(255, 255, 255) -- Pure White TopBar
-Theme.Text = Color3.fromRGB(33, 26, 46) -- Deep Dark Purple
-Theme.SubText = Color3.fromRGB(155, 147, 166) -- Soft Gray Purple
-Theme.Border = Color3.fromRGB(235, 230, 245) -- Very soft border
-Theme.Primary = Color3.fromRGB(124, 58, 237) -- Primary Purple
-Theme.Accent = Color3.fromRGB(236, 72, 153) -- Primary Pink
-Theme.Hover = Color3.fromRGB(245, 240, 255)
+-- Use Config theme, fill in any missing keys as fallback
+Theme.Background = Theme.Background or Color3.fromRGB(16, 17, 23)
+Theme.Sidebar = Theme.Sidebar or Color3.fromRGB(20, 21, 28)
+Theme.TopBar = Theme.TopBar or Color3.fromRGB(23, 24, 32)
+Theme.Text = Theme.Text or Color3.fromRGB(255, 255, 255)
+Theme.SubText = Theme.SubText or Color3.fromRGB(145, 145, 165)
+Theme.Border = Theme.Border or Color3.fromRGB(40, 41, 48)
+Theme.Primary = Theme.Primary or Color3.fromRGB(105, 90, 190)
+Theme.Accent = Theme.Accent or Color3.fromRGB(105, 90, 190)
+Theme.Hover = Theme.Hover or Color3.fromRGB(30, 31, 38)
 
 local GuiParent = Services.CoreGui
 pcall(function()
@@ -435,4 +435,4 @@ Toggle.MouseButton1Up:Connect(function()
     end
 end)
 
-print(" UI Loaded (StarHub Premium Style)")
+print(" UI Loaded (Jayjay Premium Style)")
