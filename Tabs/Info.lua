@@ -1,13 +1,14 @@
-﻿
-local TabsManager = _G.JAYJAY_TabsManager
+
+local TabsManager = _G.JAYJAY_TabsManager or (getgenv and type(getgenv) == "function" and getgenv().JAYJAY_TabsManager)
 local TweenService = game:GetService("TweenService")
+local CreateSectionTitle = CreateSectionTitle or _G.CreateSectionTitle or (getgenv and type(getgenv) == "function" and getgenv().CreateSectionTitle)
 
 local InfoTab, InfoPage = TabsManager:RegisterTab("Info", 1, "INFO")
 CreateSectionTitle(InfoPage, "JAYJAY HUB | Steal An Egg", 1)
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(1, 0, 0, 26)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "Join Group For Notification Update Script"
+TitleLabel.Text = "Join Group"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.TextSize = 13
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -28,7 +29,7 @@ local LinkBtn = Instance.new("TextButton")
 LinkBtn.Size = UDim2.new(1, 0, 0, 30)
 LinkBtn.BackgroundColor3 = Color3.fromRGB(28, 29, 42)
 LinkBtn.BorderSizePixel = 0
-LinkBtn.Text = "Link : https://discord.gg/aKeK6avatS"
+LinkBtn.Text = "Link : https://discord.gg/3QBtQb8z9n"
 LinkBtn.TextColor3 = Color3.fromRGB(120, 180, 255)
 LinkBtn.TextSize = 12
 LinkBtn.TextXAlignment = Enum.TextXAlignment.Left
@@ -72,7 +73,7 @@ CopyStroke.Color = Color3.fromRGB(120, 130, 255)
 CopyStroke.Thickness = 1.5
 CopyStroke.Transparency = 0.3
 CopyStroke.Parent = CopyBtn
-local DISCORD_LINK = "https://discord.gg/aKeK6avatS"
+local DISCORD_LINK = "https://discord.gg/3QBtQb8z9n"
 
 local function CopyDiscord()
     local Success = pcall(function()

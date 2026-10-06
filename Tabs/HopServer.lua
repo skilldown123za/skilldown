@@ -1,8 +1,9 @@
-﻿
-local TabsManager = _G.JAYJAY_TabsManager
+
+local TabsManager = _G.JAYJAY_TabsManager or (getgenv and type(getgenv) == "function" and getgenv().JAYJAY_TabsManager)
 local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
+local CreateSectionTitle = CreateSectionTitle or _G.CreateSectionTitle or (getgenv and type(getgenv) == "function" and getgenv().CreateSectionTitle)
 
 local PLACE_ID = 107778070777162
 

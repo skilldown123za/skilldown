@@ -1,27 +1,34 @@
+
 local TweenService = game:GetService("TweenService")
 
-local CreateTab = _G.CreateTab
-local CreatePage = _G.CreatePage
+local function Resolve(name)
+    return getfenv()[name] or _G[name] or (getgenv and type(getgenv) == "function" and getgenv()[name])
+end
 
-local TabsManager = {}
-TabsManager.Tabs = {}
-
--- Ensure access to Component functions across loadstring environments
-local CreateTab = CreateTab or _G.CreateTab
-local CreatePage = CreatePage or _G.CreatePage
-local CreateSectionTitle = CreateSectionTitle or _G.CreateSectionTitle
-local CreateCheckbox = CreateCheckbox or _G.CreateCheckbox
-local CreateTextBoxWithCheckbox = CreateTextBoxWithCheckbox or _G.CreateTextBoxWithCheckbox
-local CreateSmartCheckbox = CreateSmartCheckbox or _G.CreateSmartCheckbox
+local CreateTab = CreateTab or Resolve("CreateTab")
+local CreatePage = CreatePage or Resolve("CreatePage")
+local CreateSectionTitle = CreateSectionTitle or Resolve("CreateSectionTitle")
+local CreateCheckbox = CreateCheckbox or Resolve("CreateCheckbox")
+local CreateTextBoxWithCheckbox = CreateTextBoxWithCheckbox or Resolve("CreateTextBoxWithCheckbox")
+local CreateSmartCheckbox = CreateSmartCheckbox or Resolve("CreateSmartCheckbox")
 
 local TabsManager = {}
 TabsManager.Tabs = {}
 TabsManager.Pages = {}
 TabsManager.ActiveTab = nil
 TabsManager.ActivePage = nil
+
 function TabsManager:RegisterTab(Name, Order, PageName)
-    local Tab = CreateTab(Name, Order)
-    local Page = CreatePage(PageName or Name:upper())
+    local tabFn = CreateTab or Resolve("CreateTab")
+    local pageFn = CreatePage or Resolve("CreatePage")
+    
+    if not tabFn or not pageFn then
+        warn("❌ TabsManager: CreateTab or CreatePage not available for " .. tostring(Name))
+        return nil, nil
+    end
+
+    local Tab = tabFn(Name, Order)
+    local Page = pageFn(PageName or Name:upper())
     
     table.insert(self.Tabs, { Tab = Tab, Page = Page, Name = Name })
     
@@ -31,6 +38,7 @@ function TabsManager:RegisterTab(Name, Order, PageName)
     
     return Tab, Page
 end
+
 function TabsManager:SelectTab(SelectedTab, SelectedPage)
     for _, data in ipairs(self.Tabs) do
         data.Page.Visible = false
@@ -38,7 +46,7 @@ function TabsManager:SelectTab(SelectedTab, SelectedPage)
         local TabText = data.Tab:FindFirstChild("TabText")
         TweenService:Create(data.Tab, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
         if Indicator then
-            TweenService:Create(Indicator, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
+            TweenService:Create(Indicator, TweenInfo.new(0.15), {Size = UDim2.new(0, 4, 0, 0), BackgroundTransparency = 1}):Play()
         end
         if TabText then
             TweenService:Create(TabText, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(155, 155, 175)}):Play()
@@ -55,7 +63,7 @@ function TabsManager:SelectTab(SelectedTab, SelectedPage)
     local Indicator = SelectedTab:FindFirstChild("Indicator")
     local TabText = SelectedTab:FindFirstChild("TabText")
     if Indicator then
-        TweenService:Create(Indicator, TweenInfo.new(0.15), {BackgroundTransparency = 0}):Play()
+        TweenService:Create(Indicator, TweenInfo.new(0.15), {Size = UDim2.new(0, 4, 0, 20), BackgroundTransparency = 0}):Play()
     end
     if TabText then
         TweenService:Create(TabText, TweenInfo.new(0.15), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()

@@ -1,7 +1,8 @@
-﻿
-local TabsManager = _G.JAYJAY_TabsManager
+
+local TabsManager = _G.JAYJAY_TabsManager or (getgenv and type(getgenv) == "function" and getgenv().JAYJAY_TabsManager)
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
+local CreateSectionTitle = CreateSectionTitle or _G.CreateSectionTitle or (getgenv and type(getgenv) == "function" and getgenv().CreateSectionTitle)
 
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera

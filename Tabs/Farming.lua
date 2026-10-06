@@ -1,6 +1,7 @@
-﻿
-local TabsManager = _G.JAYJAY_TabsManager
+
+local TabsManager = _G.JAYJAY_TabsManager or (getgenv and type(getgenv) == "function" and getgenv().JAYJAY_TabsManager)
 local TweenService = game:GetService("TweenService")
+local CreateSectionTitle = CreateSectionTitle or _G.CreateSectionTitle or (getgenv and type(getgenv) == "function" and getgenv().CreateSectionTitle)
 
 local FarmingTab, FarmingPage = TabsManager:RegisterTab("Farming", 2, "FARMING")
 
